@@ -5,7 +5,7 @@ import Printer from '../component/calculator/printer';
 
 export default function Calculator() {
     return (
-        <SafeAreaView className='w-dvw h-dvh bg-primary'>
+        <SafeAreaView className='w-full h-full bg-primary'>
             <Printer />
             <Options />
             <Keyboard />

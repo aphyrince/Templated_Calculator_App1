@@ -4,7 +4,7 @@ import Item from './Item';
 
 export default function Keyboard() {
     return (
-        <View className=' w-full grid gap-2 p-2'>
+        <View className='flex-1 w-full grid gap-2 p-2'>
             <Item />
             <Item />
             <Item />
