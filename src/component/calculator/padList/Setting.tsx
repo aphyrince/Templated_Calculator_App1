@@ -7,9 +7,9 @@ export default function Setting() {
     return (
         <Pressable
             onPress={() => {
-                router.push('/groupList');
+                router.push('/KeyPadList');
             }}
-            className='ml-auto flex justify-center items-center size-20 p-2 bg-amber-600 rounded-xl font-extrabold text-xl color-black/90'
+            className='ml-auto flex justify-center items-center size-16 p-2 bg-accent rounded-xl font-extrabold text-xl color-black/90'
         >
             설정
         </Pressable>
