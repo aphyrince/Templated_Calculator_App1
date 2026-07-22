@@ -1,17 +1,11 @@
-interface KeyPadList_Type {
-    id: string;
-    title: string;
-    //순서
-    order?: number;
-    keyPads: KeyPad[];
+interface KeyPad_Ing_Type {
+    name: string;
+    keys: Key[];
+    color?: string;
 }
 
-interface KeyPad_Type {
+interface KeyPad_Type extends KeyPad_Ing_Type {
     id: string;
-    title: string;
-    keys: Key[];
-    order?: number;
-    color?: string;
 }
 
 interface Key_Type {
