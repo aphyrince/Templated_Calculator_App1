@@ -4,7 +4,12 @@ interface KeyPadsStore {
     KeyPads: KeyPad_Type[];
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
     deleteKeyPad: (id: string) => void;
+    updateKeyPad: (updatedKeyPad: KeyPad_Type) => void;
     moveKeyPad: (id: string, order: number) => void;
+    addKey: (newKey: Key_Ing_Type) => void;
+    deleteKey: (padId: string, keyId: string) => void;
+    updateKey: (padId: string, updatedKey: Key_Type) => void;
+    moveKey: (padId: string, order: number) => void;
 }
 const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
     KeyPads: [],
