@@ -6,7 +6,6 @@ interface KeyPadListStore {
     deleteKeyPad: (id: string) => void;
     changeKeyPadOrder: (id: string, order: number) => void;
 }
-
 const useKeyPadListStore = create<KeyPadListStore>()((set) => ({
     KeyPadList: [],
     addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {

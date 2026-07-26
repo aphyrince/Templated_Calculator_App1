@@ -16,5 +16,4 @@ interface Key_Type {
     args?: number[];
     expression?: string;
     color?: string;
-    order?: number;
 }
