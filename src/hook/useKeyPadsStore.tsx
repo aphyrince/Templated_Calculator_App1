@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { stdNum } from '../data/dummy';
 
-interface keyPadsStore {
+interface KeyPadsStore {
     keyPads: KeyPad_Type[];
 
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
@@ -17,7 +17,7 @@ interface keyPadsStore {
     moveKey: (padId: string, keyId: string, to: number) => void;
 }
 
-const usekeyPadsStore = create<keyPadsStore>()(
+const useKeyPadsStore = create<KeyPadsStore>()(
     persist(
         (set) => ({
             keyPads: [stdNum],
@@ -118,4 +118,4 @@ const usekeyPadsStore = create<keyPadsStore>()(
     ),
 );
 
-export default usekeyPadsStore;
+export default useKeyPadsStore;
