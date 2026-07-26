@@ -1,32 +1,32 @@
 import { create } from 'zustand';
 
-interface KeyPadListStore {
-    KeyPadList: KeyPad_Type[];
+interface KeyPadsStore {
+    KeyPads: KeyPad_Type[];
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
     deleteKeyPad: (id: string) => void;
-    changeKeyPadOrder: (id: string, order: number) => void;
+    moveKeyPad: (id: string, order: number) => void;
 }
-const useKeyPadListStore = create<KeyPadListStore>()((set) => ({
-    KeyPadList: [],
+const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
+    KeyPads: [],
     addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
         const id = new Date().toDateString() + Math.random() * 1000 + '_KeyPad';
         const newKeyPad: KeyPad_Type = { id, ...newKeyPadNoId };
-        set((s) => ({ KeyPadList: [...s.KeyPadList, newKeyPad] }));
+        set((s) => ({ KeyPads: [...s.KeyPads, newKeyPad] }));
     },
     deleteKeyPad: (id: string) => {
-        set((s) => ({ KeyPadList: [...s.KeyPadList.filter((keyPad) => keyPad.id !== id)] }));
+        set((s) => ({ KeyPads: [...s.KeyPads.filter((keyPad) => keyPad.id !== id)] }));
     },
-    changeKeyPadOrder: (id: string, order: number) => {
+    moveKeyPad: (id: string, order: number) => {
         set((s) => {
-            const prevOrder = s.KeyPadList.findIndex((keyPad) => keyPad.id === id);
-            const target = s.KeyPadList[prevOrder];
-            const targetDeletedList = [...s.KeyPadList.filter((keyPad) => keyPad.id !== id)];
+            const prevOrder = s.KeyPads.findIndex((keyPad) => keyPad.id === id);
+            const target = s.KeyPads[prevOrder];
+            const targetDeletedList = [...s.KeyPads.filter((keyPad) => keyPad.id !== id)];
             const frontList = targetDeletedList.slice(0, order);
             const backList = targetDeletedList.slice(order);
             const resultList = [...frontList, target, ...backList];
-            return { KeyPadList: resultList };
+            return { KeyPads: resultList };
         });
     },
 }));
 
-export default useKeyPadListStore;
+export default useKeyPadsStore;
