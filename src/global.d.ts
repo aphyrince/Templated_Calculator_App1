@@ -12,7 +12,7 @@ interface Key_Type {
     id: string;
     title: string;
     value: number;
-    isFunc: 'Constant' | 'Formula' | 'Function';
+    type: 'Constant' | 'Formula' | 'Function';
     args?: number[];
     expression?: string;
     color?: string;
