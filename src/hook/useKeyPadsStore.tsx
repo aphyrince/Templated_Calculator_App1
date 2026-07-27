@@ -5,6 +5,7 @@ import { stdNum } from '../data/dummy';
 
 interface KeyPadsStore {
     keyPads: KeyPad_Type[];
+    selectedKeyPad: KeyPad_Type;
 
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
     deleteKeyPad: (id: string) => void;
@@ -15,12 +16,15 @@ interface KeyPadsStore {
     deleteKey: (padId: string, keyId: string) => void;
     updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => void;
     moveKey: (padId: string, keyId: string, to: number) => void;
+
+    setSelectedKeyPad: (keyPad: KeyPad_Type) => void;
 }
 
 const useKeyPadsStore = create<KeyPadsStore>()(
     persist(
         (set) => ({
             keyPads: [stdNum],
+            selectedKeyPad: stdNum,
 
             addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
                 const id = crypto.randomUUID();
@@ -112,6 +116,11 @@ const useKeyPadsStore = create<KeyPadsStore>()(
 
                     return { keyPads: s.keyPads.map((keypad) => (keypad.id === padId ? { ...movedKeyPad } : keypad)) };
                 });
+            },
+            setSelectedKeyPad: (keyPad: KeyPad_Type) => {
+                set((s) => ({
+                    selectedKeyPad: keyPad,
+                }));
             },
         }),
         { name: 'keypads-storage', storage: createJSONStorage(() => AsyncStorage) },
