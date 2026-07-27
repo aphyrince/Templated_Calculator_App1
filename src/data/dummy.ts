@@ -1,4 +1,7 @@
-const keys: Key_Type[] = Array.from({ length: 10 }, (_, idx) => ({
+const stdNum_id = crypto.randomUUID();
+
+const keys: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
+    padId: stdNum_id,
     id: crypto.randomUUID(),
     title: idx.toString(),
     value: idx,
@@ -6,9 +9,23 @@ const keys: Key_Type[] = Array.from({ length: 10 }, (_, idx) => ({
 }));
 
 const stdNum: KeyPad_Type = {
-    name: 'standard numbers',
-    keys,
+    title: 'standard numbers',
     id: crypto.randomUUID(),
+    keys,
 };
 
-export { stdNum };
+const keys2: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
+    padId: stdNum_id,
+    id: crypto.randomUUID(),
+    title: idx.toString(),
+    value: idx,
+    type: 'Constant',
+}));
+
+const stdNum2: KeyPad_Type = {
+    title: 'seconde numbers2',
+    id: crypto.randomUUID(),
+    keys: keys2,
+};
+
+export { stdNum, stdNum2 };

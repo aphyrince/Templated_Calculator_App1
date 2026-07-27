@@ -2,14 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-function PadItem() {
-    return (
-        <View className='flex justify-center items-center size-16 p-2 bg-btn rounded-xl font-bold text-lg color-black/60'>
-            <Text>자판배열1</Text>
-        </View>
-    );
-}
+import KeyPadSelector from '../component/calculator/KeyPadSelector';
 
 function KeyItem() {
     return (
@@ -21,6 +14,7 @@ function KeyItem() {
 
 export default function Calculator() {
     const router = useRouter();
+
     return (
         <SafeAreaView className='w-full h-full bg-primary'>
             <View className='flex flex-row justify-start items-center w-full h-1/4 bg-white/30 p-4'>
@@ -30,9 +24,8 @@ export default function Calculator() {
             </View>
             <View className='flex flex-row justify-start items-center gap-1 w-full h-20 p-2 bg-third '>
                 {/* <FlatList data={[]} renderItem={Item}></FlatList> */}
-                <PadItem />
-                <PadItem />
-                <PadItem />
+                <KeyPadSelector />
+
                 <Pressable
                     onPress={() => {
                         router.push('/KeyPadList');

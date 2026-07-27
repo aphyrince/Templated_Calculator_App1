@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import { stdNum } from '../data/dummy';
+import { stdNum, stdNum2 } from '../data/dummy';
 
 interface KeyPadsStore {
     keyPads: KeyPad_Type[];
@@ -23,7 +23,7 @@ interface KeyPadsStore {
 const useKeyPadsStore = create<KeyPadsStore>()(
     persist(
         (set) => ({
-            keyPads: [stdNum],
+            keyPads: [stdNum, stdNum2],
             selectedKeyPad: stdNum,
 
             addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
