@@ -19,4 +19,5 @@ interface Key_Ing_Type {
 
 interface Key_Type extends Key_Ing_Type {
     id: string;
+    padId: string;
 }

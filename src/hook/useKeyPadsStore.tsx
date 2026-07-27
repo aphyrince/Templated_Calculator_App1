@@ -54,7 +54,7 @@ const useKeyPadsStore = create<KeyPadsStore>()(
 
             addKey: (padId: string, newKeyNoId: Key_Ing_Type) => {
                 const id = crypto.randomUUID();
-                const newKey: Key_Type = { id, ...newKeyNoId };
+                const newKey: Key_Type = { id, padId, ...newKeyNoId };
                 set((s) => ({
                     keyPads: [
                         ...s.keyPads.map((keypad) =>
