@@ -1,8 +1,10 @@
-const stdNum_id = crypto.randomUUID();
+import { randomUUID } from 'expo-crypto';
+
+const stdNum_id = randomUUID();
 
 const keys: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
     padId: stdNum_id,
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     title: idx.toString(),
     value: idx,
     type: 'Constant',
@@ -10,13 +12,13 @@ const keys: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
 
 const stdNum: KeyPad_Type = {
     title: 'standard numbers',
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     keys,
 };
 
 const keys2: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
     padId: stdNum_id,
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     title: idx.toString(),
     value: idx,
     type: 'Constant',
@@ -24,7 +26,7 @@ const keys2: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
 
 const stdNum2: KeyPad_Type = {
     title: 'seconde numbers2',
-    id: crypto.randomUUID(),
+    id: randomUUID(),
     keys: keys2,
 };
 
