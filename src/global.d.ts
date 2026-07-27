@@ -1,5 +1,5 @@
 interface KeyPad_Ing_Type {
-    name: string;
+    title: string;
     keys: Key[];
     color?: string;
 }
