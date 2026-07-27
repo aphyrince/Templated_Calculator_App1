@@ -1,9 +1,28 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Pressable } from 'react-native';
+import { stdNum, stdNum2 } from '../data/dummy';
 import '../global.css';
+import { useAsyncStorage } from '../hook/useAsyncStorage';
+import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 export default function RootLayout() {
+    const [storedKeyPadData, loading] = useAsyncStorage<KeyPad_Type[]>('@last_Calculator_KeyPads', [stdNum, stdNum2]);
+    const [isInitialized, setIsInitialized] = useState(false);
+    const setKeyPads = useKeyPadsStore((s) => s.setKeyPads);
+
+    useEffect(() => {
+        if (!loading && !isInitialized) {
+            setKeyPads(storedKeyPadData);
+
+            const timer = setTimeout(() => {
+                setIsInitialized(true);
+            }, 50);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, isInitialized, setKeyPads, storedKeyPadData]);
+
     return (
         <Stack
             screenOptions={{

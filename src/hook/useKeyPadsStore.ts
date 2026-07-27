@@ -6,6 +6,9 @@ interface KeyPadsStore {
     keyPads: KeyPad_Type[];
     selectedKeyPadId: string;
 
+    //초기화용
+    setKeyPads: (initialKeyPads: KeyPad_Type[]) => void;
+
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
     deleteKeyPad: (id: string) => void;
     updateKeyPad: (id: string, data: Partial<KeyPad_Type>) => void;
@@ -24,6 +27,10 @@ console.log('Store created');
 const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
     keyPads: [stdNum, stdNum2],
     selectedKeyPadId: stdNum.id,
+
+    setKeyPads: (initialKeyPads: KeyPad_Type[]) => {
+        useKeyPadsStore.setState({ keyPads: initialKeyPads, selectedKeyPadId: initialKeyPads[0].id });
+    },
 
     addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
         const id = randomUUID();
