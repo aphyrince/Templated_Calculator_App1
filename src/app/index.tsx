@@ -4,14 +4,6 @@ import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyPadSelector from '../component/calculator/KeyPadSelector';
 
-function KeyItem() {
-    return (
-        <Pressable className='flex justify-center items-center size-16 bg-btn rounded-md'>
-            <Text className='text-2xl font-semibold'>1</Text>
-        </Pressable>
-    );
-}
-
 export default function Calculator() {
     const router = useRouter();
 
@@ -22,6 +14,7 @@ export default function Calculator() {
                 <Text className='text-amber-400 text-4xl'> v!</Text>
                 {/* <View> 현재 입력 위치 따라다니는 커서</View> */}
             </View>
+
             <View className='flex flex-row justify-start items-center gap-1 w-full h-20 p-2 bg-third '>
                 {/* <FlatList data={[]} renderItem={Item}></FlatList> */}
                 <KeyPadSelector />
@@ -35,9 +28,7 @@ export default function Calculator() {
                     <Ionicons name='reorder-three' size={32} />
                 </Pressable>
             </View>
-            <View className='flex-1 w-full grid gap-2 p-2'>
-                <KeyItem />
-            </View>
+            <View className='flex-1 w-full grid gap-2 p-2'></View>
         </SafeAreaView>
     );
 }

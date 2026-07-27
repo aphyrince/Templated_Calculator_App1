@@ -1,11 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 import { stdNum, stdNum2 } from '../data/dummy';
 
 interface KeyPadsStore {
     keyPads: KeyPad_Type[];
-    selectedKeyPad: KeyPad_Type;
+    selectedKeyPadId: string;
 
     addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
     deleteKeyPad: (id: string) => void;
@@ -17,114 +16,107 @@ interface KeyPadsStore {
     updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => void;
     moveKey: (padId: string, keyId: string, to: number) => void;
 
-    setSelectedKeyPad: (keyPad: KeyPad_Type) => void;
+    setSelectedKeyPadId: (keyPadId: string) => void;
 }
 
-const useKeyPadsStore = create<KeyPadsStore>()(
-    persist(
-        (set) => ({
-            keyPads: [stdNum, stdNum2],
-            selectedKeyPad: stdNum,
+console.log('Store created');
 
-            addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
-                const id = crypto.randomUUID();
-                const newKeyPad: KeyPad_Type = { id, ...newKeyPadNoId };
-                set((s) => ({ keyPads: [...s.keyPads, newKeyPad] }));
-            },
+const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
+    keyPads: [stdNum, stdNum2],
+    selectedKeyPadId: stdNum.id,
 
-            deleteKeyPad: (id: string) => {
-                set((s) => ({ keyPads: [...s.keyPads.filter((keyPad) => keyPad.id !== id)] }));
-            },
+    addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
+        const id = randomUUID();
+        const newKeyPad: KeyPad_Type = { id, ...newKeyPadNoId };
+        set((s) => ({ keyPads: [...s.keyPads, newKeyPad] }));
+    },
 
-            updateKeyPad: (id: string, data: Partial<KeyPad_Type>) => {
-                set((s) => ({
-                    keyPads: [...s.keyPads.map((keyPad) => (keyPad.id === id ? { ...keyPad, ...data } : keyPad))],
-                }));
-            },
+    deleteKeyPad: (id: string) => {
+        set((s) => ({ keyPads: [...s.keyPads.filter((keyPad) => keyPad.id !== id)] }));
+    },
 
-            moveKeyPad: (id: string, to: number) => {
-                set((s) => {
-                    const from = s.keyPads.findIndex((keyPad) => keyPad.id === id);
-                    const target = s.keyPads[from];
-                    const targetDeletedList = [...s.keyPads.filter((keyPad) => keyPad.id !== id)];
-                    // 타겟을 뺐으니
-                    if (to > from) to -= 1;
-                    const frontList = targetDeletedList.slice(0, to);
-                    const backList = targetDeletedList.slice(to);
-                    const resultList = [...frontList, target, ...backList];
-                    return { keyPads: resultList };
-                });
-            },
+    updateKeyPad: (id: string, data: Partial<KeyPad_Type>) => {
+        set((s) => ({
+            keyPads: [...s.keyPads.map((keyPad) => (keyPad.id === id ? { ...keyPad, ...data } : keyPad))],
+        }));
+    },
 
-            addKey: (padId: string, newKeyNoId: Key_Ing_Type) => {
-                const id = crypto.randomUUID();
-                const newKey: Key_Type = { id, padId, ...newKeyNoId };
-                set((s) => ({
-                    keyPads: [
-                        ...s.keyPads.map((keypad) =>
-                            keypad.id === padId ? { ...keypad, keys: [...keypad.keys, newKey] } : keypad,
-                        ),
-                    ],
-                }));
-            },
+    moveKeyPad: (id: string, to: number) => {
+        set((s) => {
+            const from = s.keyPads.findIndex((keyPad) => keyPad.id === id);
+            const target = s.keyPads[from];
+            const targetDeletedList = [...s.keyPads.filter((keyPad) => keyPad.id !== id)];
+            // 타겟을 뺐으니
+            if (to > from) to -= 1;
+            const frontList = targetDeletedList.slice(0, to);
+            const backList = targetDeletedList.slice(to);
+            const resultList = [...frontList, target, ...backList];
+            return { keyPads: resultList };
+        });
+    },
 
-            deleteKey: (padId: string, keyId: string) => {
-                set((s) => ({
-                    keyPads: [
-                        ...s.keyPads.map((keypad) =>
-                            keypad.id === padId
-                                ? { ...keypad, keys: [...keypad.keys.filter((key) => key.id !== keyId)] }
-                                : keypad,
-                        ),
-                    ],
-                }));
-            },
+    addKey: (padId: string, newKeyNoId: Key_Ing_Type) => {
+        const id = randomUUID();
+        const newKey: Key_Type = { id, padId, ...newKeyNoId };
+        set((s) => ({
+            keyPads: [
+                ...s.keyPads.map((keypad) =>
+                    keypad.id === padId ? { ...keypad, keys: [...keypad.keys, newKey] } : keypad,
+                ),
+            ],
+        }));
+    },
 
-            updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => {
-                set((s) => ({
-                    keyPads: [
-                        ...s.keyPads.map((keypad) =>
-                            keypad.id === padId
-                                ? {
-                                      ...keypad,
-                                      keys: [
-                                          ...keypad.keys.map((key) => (key.id === keyId ? { ...key, ...data } : key)),
-                                      ],
-                                  }
-                                : keypad,
-                        ),
-                    ],
-                }));
-            },
+    deleteKey: (padId: string, keyId: string) => {
+        set((s) => ({
+            keyPads: [
+                ...s.keyPads.map((keypad) =>
+                    keypad.id === padId
+                        ? { ...keypad, keys: [...keypad.keys.filter((key) => key.id !== keyId)] }
+                        : keypad,
+                ),
+            ],
+        }));
+    },
 
-            moveKey: (padId: string, keyId: string, to: number) => {
-                set((s) => {
-                    const targetKeyPad = s.keyPads.find((keypad) => keypad.id === padId);
+    updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => {
+        set((s) => ({
+            keyPads: [
+                ...s.keyPads.map((keypad) =>
+                    keypad.id === padId
+                        ? {
+                              ...keypad,
+                              keys: [...keypad.keys.map((key) => (key.id === keyId ? { ...key, ...data } : key))],
+                          }
+                        : keypad,
+                ),
+            ],
+        }));
+    },
 
-                    if (!targetKeyPad) return s;
+    moveKey: (padId: string, keyId: string, to: number) => {
+        set((s) => {
+            const targetKeyPad = s.keyPads.find((keypad) => keypad.id === padId);
 
-                    const from = targetKeyPad.keys.findIndex((key) => key.id === keyId);
-                    const targetKey = targetKeyPad.keys[from];
-                    const targetDeletedKeys = [...targetKeyPad.keys.filter((key) => key.id !== keyId)];
-                    if (to > from) to -= 1;
-                    const frontKeys = targetDeletedKeys.slice(0, to);
-                    const backKeys = targetDeletedKeys.slice(to);
+            if (!targetKeyPad) return s;
 
-                    const movedKeys = [...frontKeys, targetKey, ...backKeys];
+            const from = targetKeyPad.keys.findIndex((key) => key.id === keyId);
+            const targetKey = targetKeyPad.keys[from];
+            const targetDeletedKeys = [...targetKeyPad.keys.filter((key) => key.id !== keyId)];
+            if (to > from) to -= 1;
+            const frontKeys = targetDeletedKeys.slice(0, to);
+            const backKeys = targetDeletedKeys.slice(to);
 
-                    const movedKeyPad = { ...targetKeyPad, keys: [...movedKeys] };
+            const movedKeys = [...frontKeys, targetKey, ...backKeys];
 
-                    return { keyPads: s.keyPads.map((keypad) => (keypad.id === padId ? { ...movedKeyPad } : keypad)) };
-                });
-            },
-            setSelectedKeyPad: (keyPad: KeyPad_Type) => {
-                set((s) => ({
-                    selectedKeyPad: keyPad,
-                }));
-            },
-        }),
-        { name: 'keypads-storage', storage: createJSONStorage(() => AsyncStorage) },
-    ),
-);
+            const movedKeyPad = { ...targetKeyPad, keys: [...movedKeys] };
+
+            return { keyPads: s.keyPads.map((keypad) => (keypad.id === padId ? { ...movedKeyPad } : keypad)) };
+        });
+    },
+    setSelectedKeyPadId: (keyPadId: string) => {
+        useKeyPadsStore.setState({ selectedKeyPadId: keyPadId });
+    },
+}));
 
 export default useKeyPadsStore;
