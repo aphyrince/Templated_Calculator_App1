@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyPad from '../component/calculator/KeyPad';
 import KeyPadSelector from '../component/calculator/KeyPadSelector';
 
 export default function Calculator() {
@@ -28,7 +29,7 @@ export default function Calculator() {
                     <Ionicons name='reorder-three' size={32} />
                 </Pressable>
             </View>
-            <View className='flex-1 w-full grid gap-2 p-2'></View>
+            <KeyPad />
         </SafeAreaView>
     );
 }

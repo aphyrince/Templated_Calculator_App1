@@ -16,7 +16,7 @@ const stdNum: KeyPad_Type = {
     keys,
 };
 
-const keys2: Key_Ing_Type[] = Array.from({ length: 10 }, (_, idx) => ({
+const keys2: Key_Ing_Type[] = Array.from({ length: 20 }, (_, idx) => ({
     padId: stdNum_id,
     id: randomUUID(),
     title: idx.toString(),
