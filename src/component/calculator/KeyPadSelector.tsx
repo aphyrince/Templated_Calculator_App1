@@ -26,11 +26,9 @@ export default function KeyPadSelector() {
     }, [selectedKeyPadId]);
 
     const effectiveSelectedId = localSelectedId ?? selectedKeyPadId;
-    const selectedLabel = keyPads.find((keyPad) => keyPad.id === effectiveSelectedId)?.title ?? 'None';
 
     return (
         <View style={{ flex: 1, height: '100%' }}>
-            <Text style={{ color: '#000000', marginBottom: 8 }}>Selected: {selectedLabel}</Text>
             <View className='flex-1 h-full flex-row gap-4'>
                 {keyPads.map((keyPad) => {
                     const isSelected = effectiveSelectedId === keyPad.id;
