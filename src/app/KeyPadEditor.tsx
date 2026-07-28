@@ -16,7 +16,7 @@ const DummyKey = () => {
     );
 };
 
-export default function KeyPad() {
+export default function KeyPadEditor() {
     return (
         <View className='flex-1 w-full bg-primary p-4 gap-4'>
             <DummyKey />

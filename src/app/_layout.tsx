@@ -46,9 +46,9 @@ export default function RootLayout() {
                 }}
             />
             <Stack.Screen
-                name='KeyPad'
+                name='KeyPadEditor'
                 options={{
-                    headerTitle: 'KeyPad',
+                    headerTitle: 'KeyPadEditor',
                     headerBackButtonDisplayMode: 'minimal',
                     headerRight: () => (
                         <Pressable className='w-20 flex justify-center items-center'>

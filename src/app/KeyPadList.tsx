@@ -7,7 +7,7 @@ export default function KeyPadList() {
 
     return (
         <View className='flex-1 items-center py-4 gap-4 w-full bg-primary'>
-            <Pressable className='w-11/12 bg-btn p-2 rounded-md' onPress={() => router.push('/KeyPad')}>
+            <Pressable className='w-11/12 bg-btn p-2 rounded-md' onPress={() => router.push('/KeyPadEditor')}>
                 <Text className='text-primary text-xl'>하하!</Text>
             </Pressable>
             <Pressable className='w-11/12 bg-btn p-2 rounded-md'>
