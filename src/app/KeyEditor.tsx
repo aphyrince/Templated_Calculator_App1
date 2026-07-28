@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import useKeyEditorStore from '../hook/useKeyEditorStore';
 
 export default function KeyEditor() {
+    const keyData = useKeyEditorStore((s) => s.key) as Key_Type;
+    console.log(keyData);
+
+    const [name, setName] = useState<string>(keyData.title);
+
     return (
         <View className='flex-1 justify-start items-center py-4 gap-8 bg-primary'>
             <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>key </Text>
+                <Text className='text-white text-2xl w-24'>name </Text>
                 <TextInput className='flex-1 w-40 px-4 py-2 rounded-md bg-white'></TextInput>
             </View>
             <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>

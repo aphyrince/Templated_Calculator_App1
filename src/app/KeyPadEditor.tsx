@@ -1,11 +1,13 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
+import useKeyEditorStore from '../hook/useKeyEditorStore';
 import useKeyPadEditorStore from '../hook/useKeyPadEditorStore';
 
 export default function KeyPadEditor() {
     const router = useRouter();
     const keyPad = useKeyPadEditorStore((s) => s.keyPad);
+    const setEditingKey = useKeyEditorStore((s) => s.setKey);
 
     return (
         <View className='flex-1 grid grid-cols-4 place-items-center bg-primary gap-4 p-4'>
@@ -15,6 +17,7 @@ export default function KeyPadEditor() {
                         key={key.id}
                         className='size-20 bg-btn p-2 rounded-md'
                         onPress={() => {
+                            setEditingKey(keyPad.id, key.id);
                             router.push('/KeyEditor');
                         }}
                     >
