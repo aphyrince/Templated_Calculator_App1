@@ -20,6 +20,7 @@ interface KeyPadsStore {
     moveKey: (padId: string, keyId: string, to: number) => void;
 
     setSelectedKeyPadId: (keyPadId: string) => void;
+    getKeyPadById: (keyPadId: string) => KeyPad_Type | undefined;
 }
 
 console.log('Store created');
@@ -123,6 +124,9 @@ const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
     },
     setSelectedKeyPadId: (keyPadId: string) => {
         useKeyPadsStore.setState({ selectedKeyPadId: keyPadId });
+    },
+    getKeyPadById: (keyPadId: string): KeyPad_Type | undefined => {
+        return useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === keyPadId);
     },
 }));
 
