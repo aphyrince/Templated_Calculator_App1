@@ -2,6 +2,7 @@ interface KeyPad_Ing_Type {
     title: string;
     keys: Key[];
     color?: string;
+    memo?: string;
 }
 
 interface KeyPad_Type extends KeyPad_Ing_Type {
@@ -15,6 +16,7 @@ interface Key_Ing_Type {
     args?: number[];
     expression?: string;
     color?: string;
+    memo?: string;
 }
 
 interface Key_Type extends Key_Ing_Type {
