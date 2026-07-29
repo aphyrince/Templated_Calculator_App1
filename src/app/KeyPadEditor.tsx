@@ -1,13 +1,23 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import useKeyEditorStore from '../hook/useKeyEditorStore';
-import useKeyPadEditorStore from '../hook/useKeyPadEditorStore';
+import useEditorStore from '../hook/useEditorStore';
+import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
     const router = useRouter();
-    const keyPad = useKeyPadEditorStore((s) => s.keyPad);
-    const setEditingKey = useKeyEditorStore((s) => s.setKey);
+    const padId = useEditorStore((s) => s.editorPadId);
+    const [keyPad, setKeyPad] = useState<KeyPad_Type | undefined>(undefined);
+    const getKeyPadById = useKeyPadsStore((s) => s.getKeyPadById);
+    const setKeyId = useEditorStore((s) => s.setEditorKeyId);
+
+    useEffect(() => {
+        if (!padId) {
+            console.log('current padId is null!');
+            return;
+        }
+        setKeyPad(getKeyPadById(padId));
+    }, [padId, getKeyPadById, setKeyId]);
 
     return (
         <View className='flex-1 grid grid-cols-4 place-items-center bg-primary gap-4 p-4'>
@@ -17,7 +27,7 @@ export default function KeyPadEditor() {
                         key={key.id}
                         className='size-20 bg-btn p-2 rounded-md'
                         onPress={() => {
-                            setEditingKey(keyPad.id, key.id);
+                            setKeyId(key.id);
                             router.push('/KeyEditor');
                         }}
                     >

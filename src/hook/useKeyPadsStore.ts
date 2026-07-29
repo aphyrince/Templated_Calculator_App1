@@ -88,18 +88,18 @@ const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
     },
 
     updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => {
-        set((s) => ({
-            keyPads: [
-                ...s.keyPads.map((keypad) =>
-                    keypad.id === padId
-                        ? {
-                              ...keypad,
-                              keys: [...keypad.keys.map((key) => (key.id === keyId ? { ...key, ...data } : key))],
-                          }
-                        : keypad,
-                ),
-            ],
-        }));
+        set((s) => {
+            const nextKeyPads = s.keyPads.map((keypad) =>
+                keypad.id === padId
+                    ? {
+                          ...keypad,
+                          keys: keypad.keys.map((key) => (key.id === keyId ? { ...key, ...data } : key)),
+                      }
+                    : keypad,
+            );
+
+            return { keyPads: nextKeyPads };
+        });
     },
 
     moveKey: (padId: string, keyId: string, to: number) => {

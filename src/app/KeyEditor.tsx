@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import useKeyEditorStore from '../hook/useKeyEditorStore';
+import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 const typeOptions: { label: string; value: Key_Ing_Type['type'] }[] = [
@@ -13,28 +13,26 @@ const colorOptions = ['#000000', '#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8
 const defaultColor = '#000000';
 
 export default function KeyEditor() {
-    const keyData = useKeyEditorStore((s) => s.key);
+    const keyId = useEditorStore((s) => s.editorKeyId);
+    const padId = useEditorStore((s) => s.editorPadId);
+
+    const [keyData, setKeyData] = useState<Key_Type | null>(null);
+    const getKeyByIds = useKeyPadsStore((s) => s.getKeyByIds);
     const updateKey = useKeyPadsStore((s) => s.updateKey);
 
-    const [title, setTitle] = useState(keyData?.title ?? '');
-    const [value, setValue] = useState(keyData?.value ?? 0);
-    const [type, setType] = useState<Key_Ing_Type['type']>(keyData?.type ?? 'Constant');
-    const [args, setArgs] = useState(keyData?.args?.join(',') ?? '');
-    const [expression, setExpression] = useState(keyData?.expression ?? '');
-    const [color, setColor] = useState(keyData?.color ?? defaultColor);
-    const [memo, setMemo] = useState(keyData?.memo ?? '');
-
     useEffect(() => {
-        if (!keyData) return;
+        if (!padId || !keyId) {
+            console.log('KeyEditor : padId or keyId is null!');
+            return;
+        }
+        setKeyData({ ...(getKeyByIds(padId, keyId) as Key_Type) });
+    }, [padId, keyId, setKeyData, getKeyByIds]);
 
-        setTitle(keyData.title ?? '');
-        setValue(keyData.value ?? 0);
-        setType(keyData.type ?? 'Constant');
-        setArgs(keyData.args?.join(',') ?? '');
-        setExpression(keyData.expression ?? '');
-        setColor(keyData.color ?? defaultColor);
-        setMemo(keyData.memo ?? '');
-    }, [keyData]);
+    const handleChange = (changed: Partial<Key_Type>) => {
+        setKeyData((prev) => (prev ? { ...prev, ...changed } : null));
+        if (!padId || !keyId) return;
+        updateKey(padId, keyId, changed);
+    };
 
     if (!keyData) {
         return (
@@ -44,51 +42,8 @@ export default function KeyEditor() {
         );
     }
 
-    const handleTitleChange = (txt: string) => {
-        setTitle(txt);
-        updateKey(keyData.padId, keyData.id, { title: txt.trim() || 'Key' });
-    };
-
-    const displayTitle = type === 'Function' ? `${title}()` : title;
-
-    const handleValueChange = (txt: string) => {
-        const parsedValue = Number(txt);
-        const nextValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
-        setValue(nextValue);
-        updateKey(keyData.padId, keyData.id, { value: nextValue });
-    };
-
-    const handleTypeChange = (nextType: Key_Ing_Type['type']) => {
-        setType(nextType);
-        updateKey(keyData.padId, keyData.id, { type: nextType });
-    };
-
-    const handleArgsChange = (txt: string) => {
-        setArgs(txt);
-        const nextArgs = txt
-            .split(',')
-            .map((item) => Number(item.trim()))
-            .filter((item) => !Number.isNaN(item));
-        updateKey(keyData.padId, keyData.id, { args: nextArgs });
-    };
-
-    const handleExpressionChange = (txt: string) => {
-        setExpression(txt);
-        updateKey(keyData.padId, keyData.id, { expression: txt });
-    };
-
-    const handleColorChange = (nextColor: string) => {
-        setColor(nextColor);
-        updateKey(keyData.padId, keyData.id, { color: nextColor });
-    };
-
-    const handleMemoChange = (txt: string) => {
-        setMemo(txt);
-        updateKey(keyData.padId, keyData.id, { memo: txt });
-    };
-
-    const showArgs = type === 'Function';
-    const showExpression = type === 'Formula' || type === 'Function';
+    const showArgs = keyData.type === 'Function';
+    const showExpression = keyData.type === 'Formula' || keyData.type === 'Function';
 
     return (
         <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
@@ -97,14 +52,11 @@ export default function KeyEditor() {
                 <View className='flex-1'>
                     <TextInput
                         className='px-4 py-2 rounded-md bg-white'
-                        value={title}
-                        onChangeText={handleTitleChange}
+                        value={keyData.title}
+                        onChangeText={(title) => {
+                            handleChange({ title });
+                        }}
                     />
-                    {type === 'Function' && (
-                        <Text className='text-white/80 text-sm mt-1'>
-                            이 키는 사용자에게 {displayTitle} 형태로 보여집니다.
-                        </Text>
-                    )}
                 </View>
             </View>
 
@@ -113,8 +65,10 @@ export default function KeyEditor() {
                 <TextInput
                     className='flex-1 px-4 py-2 rounded-md bg-white'
                     keyboardType='numeric'
-                    value={String(value)}
-                    onChangeText={handleValueChange}
+                    value={String(keyData.value)}
+                    onChangeText={(value) => {
+                        handleChange({ value: parseInt(value) });
+                    }}
                 />
             </View>
 
@@ -122,12 +76,12 @@ export default function KeyEditor() {
                 <Text className='text-white text-2xl w-24'>type</Text>
                 <View className='flex-1 flex-row gap-2'>
                     {typeOptions.map((option) => {
-                        const selected = type === option.value;
+                        const selected = keyData.type === option.value;
                         return (
                             <Pressable
                                 key={option.value}
                                 className={`flex-1 py-2 rounded-md ${selected ? 'bg-btn' : 'bg-white'}`}
-                                onPress={() => handleTypeChange(option.value)}
+                                onPress={() => handleChange({ type: option.value })}
                             >
                                 <Text className={`text-center ${selected ? 'text-white' : 'text-black'}`}>
                                     {option.label}
@@ -143,9 +97,9 @@ export default function KeyEditor() {
                     <Text className='text-white text-2xl w-24'>args</Text>
                     <TextInput
                         className='flex-1 px-4 py-2 rounded-md bg-white'
-                        placeholder='1,2,3'
-                        value={args}
-                        onChangeText={handleArgsChange}
+                        // placeholder='1,2,3'
+                        // value={keyData.args || ''}
+                        // onChangeText={handleArgsChange}
                     />
                 </View>
             )}
@@ -158,11 +112,13 @@ export default function KeyEditor() {
                     </View>
                     <TextInput
                         className='w-full px-4 py-2 rounded-md bg-white'
-                        placeholder={type === 'Function' ? '예: [ + 3] * 2 또는 func([] , [])' : '예: [ + 3] * 2'}
-                        value={expression}
-                        onChangeText={handleExpressionChange}
+                        placeholder={
+                            keyData.type === 'Function' ? '예: [ + 3] * 2 또는 func([] , [])' : '예: [ + 3] * 2'
+                        }
+                        value={keyData.expression}
+                        onChangeText={(expression) => handleChange({ expression })}
                     />
-                    {type === 'Function' && (
+                    {keyData.type === 'Function' && (
                         <Text className='text-white/80 text-sm'>
                             이 경우에는 함수 이름과 빈칸만 보이거나, 빈칸과 수식이 함께 보일 수 있습니다.
                         </Text>
@@ -174,21 +130,23 @@ export default function KeyEditor() {
                 <Text className='text-white text-2xl w-24'>color</Text>
                 <View className='flex-1 flex-row flex-wrap gap-2'>
                     {colorOptions.map((option) => {
-                        const selected = color === option;
+                        const selected = keyData.color === option;
                         return (
                             <Pressable
                                 key={option}
                                 className={`size-8 rounded-full border-2 ${selected ? 'border-white' : 'border-transparent'}`}
                                 style={{ backgroundColor: option }}
-                                onPress={() => handleColorChange(option)}
+                                onPress={() => handleChange({ color: option })}
                             />
                         );
                     })}
                     <Pressable
-                        className={`px-3 py-2 rounded-md ${color === defaultColor ? 'bg-btn' : 'bg-white'}`}
-                        onPress={() => handleColorChange(defaultColor)}
+                        className={`px-3 py-2 rounded-md ${keyData.color === defaultColor ? 'bg-btn' : 'bg-white'}`}
+                        onPress={() => handleChange({ color: defaultColor })}
                     >
-                        <Text className={`${color === defaultColor ? 'text-white' : 'text-black'}`}>default</Text>
+                        <Text className={`${keyData.color === defaultColor ? 'text-white' : 'text-black'}`}>
+                            default
+                        </Text>
                     </Pressable>
                 </View>
             </View>
@@ -197,8 +155,8 @@ export default function KeyEditor() {
                 <Text className='text-white text-2xl w-24'>memo</Text>
                 <TextInput
                     className='flex-1 px-4 py-2 rounded-md bg-white'
-                    value={memo}
-                    onChangeText={handleMemoChange}
+                    value={keyData.memo}
+                    onChangeText={(memo) => handleChange({ memo })}
                 />
             </View>
         </View>
