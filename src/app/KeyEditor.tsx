@@ -9,8 +9,8 @@ const typeOptions: { label: string; value: Key_Ing_Type['type'] }[] = [
     { label: 'Function', value: 'Function' },
 ];
 
-const colorOptions = ['#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#facc15'];
-const defaultColor = '#f59e0b';
+const colorOptions = ['#000000', '#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#facc15'];
+const defaultColor = '#000000';
 
 export default function KeyEditor() {
     const keyData = useKeyEditorStore((s) => s.key);
