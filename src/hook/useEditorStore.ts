@@ -21,3 +21,5 @@ const useEditorStore = create<EditorStore>()((set) => ({
         console.log('useEditorStore -> setKeyId! after : ', useEditorStore.getState().keyId);
     },
 }));
+
+export default useEditorStore;
