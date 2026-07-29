@@ -1,7 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable } from 'react-native';
 import { stdNum, stdNum2 } from '../data/dummy';
 import '../global.css';
 import { useAsyncStorage } from '../hook/useAsyncStorage';
@@ -38,25 +36,9 @@ export default function RootLayout() {
                 options={{
                     headerTitle: 'KeyPad List',
                     headerBackButtonDisplayMode: 'minimal',
-                    headerRight: () => (
-                        <Pressable className='w-20 flex justify-center items-center'>
-                            <Ionicons name='add' size={32} color={'#FF8D28'} />
-                        </Pressable>
-                    ),
                 }}
             />
-            <Stack.Screen
-                name='KeyPadEditor'
-                options={{
-                    headerTitle: 'KeyPadEditor',
-                    headerBackButtonDisplayMode: 'minimal',
-                    headerRight: () => (
-                        <Pressable className='w-20 flex justify-center items-center'>
-                            <Ionicons name='add' size={32} color={'#FF8D28'} />
-                        </Pressable>
-                    ),
-                }}
-            />
+            <Stack.Screen name='KeyPadEditor' />
             <Stack.Screen
                 name='KeyEditor'
                 options={{ headerTitle: 'Key Editor', headerBackButtonDisplayMode: 'minimal' }}

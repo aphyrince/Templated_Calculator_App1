@@ -1,5 +1,6 @@
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRouter } from 'expo-router';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
@@ -10,6 +11,19 @@ export default function KeyPadEditor() {
     const [keyPad, setKeyPad] = useState<KeyPad_Type | undefined>(undefined);
     const getKeyPadById = useKeyPadsStore((s) => s.getKeyPadById);
     const setKeyId = useEditorStore((s) => s.setEditorKeyId);
+
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: keyPad?.title ?? 'KeyPad?',
+            headerBackButtonDisplayMode: 'minimal',
+            headerRight: () => (
+                <Pressable className='w-20 flex justify-center items-center'>
+                    <Ionicons name='add' size={32} color={'#FF8D28'} />
+                </Pressable>
+            ),
+        });
+    }, [navigation, keyPad]);
 
     useEffect(() => {
         if (!padId) {
