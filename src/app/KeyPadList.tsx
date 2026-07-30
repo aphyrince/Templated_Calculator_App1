@@ -8,35 +8,58 @@ import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 export default function KeyPadList() {
     const router = useRouter();
-    const keyPads = useKeyPadsStore((s) => s.keyPads);
-    const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
     const navigation = useNavigation();
+
+    const keyPads = useKeyPadsStore((s) => s.keyPads);
     const addKeyPad = useKeyPadsStore((s) => s.addKeyPad);
 
-    const [showInput, setShowInput] = useState(false);
-    const inputRef = useRef<TextInput>(null);
+    const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
 
+    const [showInput, setShowInput] = useState(false);
     const [newKeyPadTitle, setNewKeyPadTitle] = useState('');
+
+    const inputRef = useRef<TextInput>(null);
 
     const translateY = useSharedValue(100);
 
-    const handleRightAddBtnClick = useCallback(() => {
-        setShowInput((prev) => {
-            translateY.value = prev ? withSpring(100) : withSpring(0);
-            return !prev;
-        });
+    const onAddKeyPad = useCallback(
+        (title: string) => {
+            if (!title.trim()) return;
+
+            const newKeyPad: KeyPad_Ing_Type = {
+                title: title.trim(),
+                keys: [],
+            };
+
+            addKeyPad(newKeyPad);
+        },
+        [addKeyPad],
+    );
+
+    const openInput = useCallback(() => {
+        if (showInput) return;
+
+        setShowInput(true);
         translateY.value = withSpring(0);
+    }, [showInput, translateY]);
+
+    const closeInput = useCallback(() => {
+        translateY.value = withSpring(100);
+
+        setTimeout(() => {
+            setShowInput(false);
+        }, 180);
     }, [translateY]);
 
-    const onAddKeyPad = (title: string) => {
-        if (title === '') return;
-        const newKeyPad: KeyPad_Ing_Type = {
-            title,
-            keys: [],
-        };
-        addKeyPad(newKeyPad);
+    const finishEditing = useCallback(() => {
+        onAddKeyPad(newKeyPadTitle);
+
         setNewKeyPadTitle('');
-    };
+
+        inputRef.current?.blur();
+
+        closeInput();
+    }, [newKeyPadTitle, onAddKeyPad, closeInput]);
 
     useEffect(() => {
         if (showInput) {
@@ -49,15 +72,15 @@ export default function KeyPadList() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <Pressable className='w-20 flex justify-center items-center' onPress={handleRightAddBtnClick}>
-                    <Ionicons name='add' size={32} color={'#FF8D28'} />
+                <Pressable className='w-20 justify-center items-center' onPress={openInput}>
+                    <Ionicons name='add' size={32} color='#FF8D28' />
                 </Pressable>
             ),
         });
-    }, [navigation, handleRightAddBtnClick]);
+    }, [navigation, openInput]);
 
     return (
-        <View className='flex-1 items-center py-4 gap-4 w-full bg-primary'>
+        <View className='flex-1 items-center py-4 gap-4 bg-primary'>
             {keyPads.map((keyPad) => (
                 <Pressable
                     key={keyPad.id}
@@ -70,31 +93,28 @@ export default function KeyPadList() {
                     <Text className='text-primary text-xl'>{keyPad.title}</Text>
                 </Pressable>
             ))}
+
             {showInput && (
                 <Animated.View
-                    className='flex-row w-11/12 items-center   bg-third border-btn/50 border-2 rounded-lg'
-                    style={{ transform: [{ translateY }] }}
-                    onBlur={() => {
-                        handleRightAddBtnClick();
-                        onAddKeyPad(newKeyPadTitle);
+                    className='flex-row w-11/12 items-center bg-third border-btn/50 border-2 rounded-lg'
+                    style={{
+                        transform: [{ translateY }],
                     }}
                 >
                     <TextInput
-                        className='flex-1 flex-row justify-start items-center text-white text-xl p-2'
                         ref={inputRef}
+                        className='flex-1 text-white text-xl p-2'
                         value={newKeyPadTitle}
-                        placeholder={'new KeyPad Title'}
-                        onChangeText={(txt) => {
-                            setNewKeyPadTitle(txt);
-                        }}
+                        placeholder='New KeyPad Title'
+                        placeholderTextColor='#999'
+                        onChangeText={setNewKeyPadTitle}
+                        onBlur={finishEditing}
+                        onSubmitEditing={finishEditing}
+                        returnKeyType='done'
                     />
-                    <Pressable
-                        onPress={() => {
-                            handleRightAddBtnClick();
-                            onAddKeyPad(newKeyPadTitle);
-                        }}
-                    >
-                        <Ionicons name='add' size={24} color='white' className='bg-green-500 rounded-md p-2' />
+
+                    <Pressable className='p-2' onPress={finishEditing}>
+                        <Ionicons name='add' size={24} color='white' />
                     </Pressable>
                 </Animated.View>
             )}
