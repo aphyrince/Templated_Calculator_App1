@@ -13,6 +13,7 @@ export default function KeyPadList() {
 
     const keyPads = useKeyPadsStore((s) => s.keyPads);
     const addKeyPad = useKeyPadsStore((s) => s.addKeyPad);
+    const deleteKeyPad = useKeyPadsStore((s) => s.deleteKeyPad);
 
     const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
 
@@ -122,7 +123,9 @@ export default function KeyPadList() {
                             setEditorKeyPadId(keyPad.id);
                             router.push('/KeyPadEditor');
                         }}
-                        onDelete={() => {}}
+                        onDelete={() => {
+                            deleteKeyPad(keyPad.id);
+                        }}
                     />
                 )}
             />
