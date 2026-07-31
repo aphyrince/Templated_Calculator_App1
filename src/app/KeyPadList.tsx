@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
-import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+import { Animated, FlatList, Pressable, Text, TextInput, View } from 'react-native';
+import { useSharedValue, withSpring } from 'react-native-reanimated';
 import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
 
@@ -20,7 +20,7 @@ export default function KeyPadList() {
 
     const inputRef = useRef<TextInput>(null);
 
-    const translateY = useSharedValue(100);
+    const translateY = useSharedValue(-100);
 
     const onAddKeyPad = useCallback(
         (title: string) => {
@@ -44,7 +44,7 @@ export default function KeyPadList() {
     }, [showInput, translateY]);
 
     const closeInput = useCallback(() => {
-        translateY.value = withSpring(100);
+        translateY.value = withSpring(-100);
 
         setTimeout(() => {
             setShowInput(false);
@@ -80,25 +80,17 @@ export default function KeyPadList() {
     }, [navigation, openInput]);
 
     return (
-        <View className='flex-1 items-center py-4 gap-4 bg-primary'>
-            {keyPads.map((keyPad) => (
-                <Pressable
-                    key={keyPad.id}
-                    className='w-11/12 bg-btn p-2 rounded-md'
-                    onPress={() => {
-                        setEditorKeyPadId(keyPad.id);
-                        router.push('/KeyPadEditor');
-                    }}
-                >
-                    <Text className='text-primary text-xl'>{keyPad.title}</Text>
-                </Pressable>
-            ))}
-
+        <View className='flex-1 items-center  bg-primary'>
             {showInput && (
                 <Animated.View
-                    className='flex-row w-11/12 items-center bg-third border-btn/50 border-2 rounded-lg'
                     style={{
-                        transform: [{ translateY }],
+                        // transform: [{ translateY: translateY.value }],
+                        marginTop: 16,
+                        backgroundColor: '#1E1E1E',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '91%',
+                        borderRadius: '8px',
                     }}
                 >
                     <TextInput
@@ -118,6 +110,61 @@ export default function KeyPadList() {
                     </Pressable>
                 </Animated.View>
             )}
+            <FlatList
+                className='w-full py-4'
+                data={keyPads}
+                keyExtractor={(keyPad) => keyPad.id}
+                renderItem={({ item: keyPad }) => (
+                    <Pressable
+                        className='w-11/12 bg-btn mx-auto p-2 mb-4 rounded-md'
+                        onPress={() => {
+                            setEditorKeyPadId(keyPad.id);
+                            router.push('/KeyPadEditor');
+                        }}
+                    >
+                        <Text className='text-primary text-xl'>{keyPad.title}</Text>
+                    </Pressable>
+                )}
+            />
         </View>
+        // <View className='flex-1 items-center py-4 gap-4 bg-primary'>
+        //     {keyPads.map((keyPad) => (
+        //         <Pressable
+        //             key={keyPad.id}
+        //             className='w-11/12 bg-btn p-2 rounded-md'
+        //             onPress={() => {
+        //                 setEditorKeyPadId(keyPad.id);
+        //                 router.push('/KeyPadEditor');
+        //             }}
+        //         >
+        //             <Text className='text-primary text-xl'>{keyPad.title}</Text>
+        //         </Pressable>
+        //     ))}
+
+        //     {showInput && (
+        //         <Animated.View
+        //             className='flex-row w-11/12 items-center bg-third border-btn/50 border-2 rounded-lg'
+        //             style={{
+        //                 transform: [{ translateY }],
+        //             }}
+        //         >
+        //             <TextInput
+        //                 ref={inputRef}
+        //                 className='flex-1 text-white text-xl p-2'
+        //                 value={newKeyPadTitle}
+        //                 placeholder='New KeyPad Title'
+        //                 placeholderTextColor='#999'
+        //                 onChangeText={setNewKeyPadTitle}
+        //                 onBlur={finishEditing}
+        //                 onSubmitEditing={finishEditing}
+        //                 returnKeyType='done'
+        //             />
+
+        //             <Pressable className='p-2' onPress={finishEditing}>
+        //                 <Ionicons name='add' size={24} color='white' />
+        //             </Pressable>
+        //         </Animated.View>
+        //     )}
+        // </View>
     );
 }
