@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Animated, FlatList, Pressable, TextInput, View } from 'react-native';
+import { Animated, Pressable, TextInput, View } from 'react-native';
+import DraggableFlatList from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
-import SwipeableKeyPadListItem from '../component/keyPadList/SwipeableKeyPadListItem';
+import KeyPadListItem from '../component/keyPadList/KeyPadListItem';
 import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
 
@@ -14,6 +16,7 @@ export default function KeyPadList() {
     const keyPads = useKeyPadsStore((s) => s.keyPads);
     const addKeyPad = useKeyPadsStore((s) => s.addKeyPad);
     const deleteKeyPad = useKeyPadsStore((s) => s.deleteKeyPad);
+    const setKeyPads = useKeyPadsStore((s) => s.setKeyPads);
 
     const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
 
@@ -112,7 +115,16 @@ export default function KeyPadList() {
                     </Pressable>
                 </Animated.View>
             )}
-            <FlatList
+            <GestureHandlerRootView className='w-full p-4'>
+                <DraggableFlatList
+                    className='w-full h-full'
+                    data={keyPads}
+                    onDragEnd={({ data }) => setKeyPads(data)}
+                    keyExtractor={(keyPad) => keyPad.id}
+                    renderItem={KeyPadListItem}
+                />
+            </GestureHandlerRootView>
+            {/* <FlatList
                 className='w-full py-4'
                 data={keyPads}
                 keyExtractor={(keyPad) => keyPad.id}
@@ -128,7 +140,7 @@ export default function KeyPadList() {
                         }}
                     />
                 )}
-            />
+            /> */}
         </View>
     );
 }
