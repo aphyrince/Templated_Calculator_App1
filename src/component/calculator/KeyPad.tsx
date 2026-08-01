@@ -12,7 +12,7 @@ export default function KeyPad() {
     }, [selectedKeyPadId, getKeyPadById]);
 
     return (
-        <View className='flex-1 grid grid-cols-4 place-items-center gap-4 p-4'>
+        <View className='flex-1 flex-row flex-wrap justify-evenly gap-7 p-4'>
             {keyPad &&
                 keyPad.keys.map((key) => (
                     <View key={key.id} className='size-20 bg-btn p-2 rounded-md'>

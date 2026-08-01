@@ -38,7 +38,7 @@ export default function KeyPadEditor() {
             <View className='bg-third mx-5 p-4 rounded-lg'>
                 <Text className='text-white text-2xl'>{keyPad?.title}</Text>
             </View>
-            <View className='flex-1 grid grid-cols-4 place-items-center bg-primary gap-4 p-4'>
+            <View className='flex-1 flex-row flex-wrap justify-evenly bg-primary gap-7 p-4'>
                 {keyPad &&
                     keyPad.keys.map((key) => (
                         <Pressable
