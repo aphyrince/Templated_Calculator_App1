@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { calcPosFromIdx } from './calcPosFromIdx';
+import { calcPosFromIdx } from '../component/keyPadEditor/calcPosFromIdx';
 
 interface GridStore {
     items: GridItem[];

@@ -17,7 +17,7 @@ interface KeyPadsStore {
     addKey: (padId: string, newKeyNoId: Key_Ing_Type) => void;
     deleteKey: (padId: string, keyId: string) => void;
     updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => void;
-    moveKey: (padId: string, keyId: string, to: number) => void;
+    moveKey: (padId: string, keyId: string, from: number, to: number) => void;
 
     setSelectedKeyPadId: (keyPadId: string) => void;
     getKeyPadById: (keyPadId: string) => KeyPad_Type | undefined;
@@ -102,25 +102,18 @@ const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
         });
     },
 
-    moveKey: (padId: string, keyId: string, to: number) => {
-        set((s) => {
-            const targetKeyPad = s.keyPads.find((keypad) => keypad.id === padId);
+    moveKey: (padId: string, keyId: string, from: number, to: number) => {
+        const targetKeyPad = useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === padId);
+        if (targetKeyPad === undefined) {
+            console.log('useKeyPadsStore : moveKey Error : no targetKeyPad');
+            return set((s) => s);
+        }
+        const targetKey = targetKeyPad.keys[from];
+        const deletedKeys = targetKeyPad.keys.filter((key) => key.id !== keyId);
+        const movedKeys = [...deletedKeys.slice(0, to), targetKey, ...deletedKeys.slice(to)];
+        const movedKeyPad = { ...targetKeyPad, keys: movedKeys };
 
-            if (!targetKeyPad) return s;
-
-            const from = targetKeyPad.keys.findIndex((key) => key.id === keyId);
-            const targetKey = targetKeyPad.keys[from];
-            const targetDeletedKeys = [...targetKeyPad.keys.filter((key) => key.id !== keyId)];
-            if (to > from) to -= 1;
-            const frontKeys = targetDeletedKeys.slice(0, to);
-            const backKeys = targetDeletedKeys.slice(to);
-
-            const movedKeys = [...frontKeys, targetKey, ...backKeys];
-
-            const movedKeyPad = { ...targetKeyPad, keys: [...movedKeys] };
-
-            return { keyPads: s.keyPads.map((keypad) => (keypad.id === padId ? { ...movedKeyPad } : keypad)) };
-        });
+        set((s) => ({ keyPads: s.keyPads.map((keyPad) => (keyPad.id === padId ? movedKeyPad : keyPad)) }));
     },
     setSelectedKeyPadId: (keyPadId: string) => {
         useKeyPadsStore.setState({ selectedKeyPadId: keyPadId });

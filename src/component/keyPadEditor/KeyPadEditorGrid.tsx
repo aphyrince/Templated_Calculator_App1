@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import useGridStore from '../../hook/useGridStore';
 import KeyPadEditorGridItem from './KeyPadEditorGridItem';
 import { calcPosFromIdx } from './calcPosFromIdx';
-import useGridStore from './useGridStore';
 
 interface Props {
     data: Key_Type[];

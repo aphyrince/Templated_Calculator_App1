@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import KeyPadEditorGrid from '../component/keyPadEditor/KeyPadEditorGrid';
@@ -7,13 +7,11 @@ import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
-    const router = useRouter();
     const padId = useEditorStore((s) => s.editorPadId);
     const [keyPad, setKeyPad] = useState<KeyPad_Type | undefined>(undefined);
     const [keys, setKeys] = useState<Key_Type[] | undefined>(keyPad?.keys);
     const getKeyPadById = useKeyPadsStore((s) => s.getKeyPadById);
     const setKeyId = useEditorStore((s) => s.setEditorKeyId);
-    const updateKeyPad = useKeyPadsStore((s) => s.updateKeyPad);
 
     const navigation = useNavigation();
     useLayoutEffect(() => {

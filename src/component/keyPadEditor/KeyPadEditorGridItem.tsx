@@ -1,11 +1,12 @@
+import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
+import useGridStore from '../../hook/useGridStore';
 import { calcIndexFromPos } from './calcIndexFromPos';
 import { calcPosFromIdx } from './calcPosFromIdx';
-import useGridStore from './useGridStore';
 
 interface Props {
     item: GridItem;
@@ -22,6 +23,7 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
     const setDraggingIdx = useGridStore((s) => s.setDraggingIdx);
     const setGapIdx = useGridStore((s) => s.setGapIdx);
     const moveItem = useGridStore((s) => s.moveItem);
+    const moveKey = useKeyPadsStore((s) => s.moveKey);
 
     const style = useAnimatedStyle(() => {
         return {
@@ -77,6 +79,7 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
             offsetY.value = withTiming(0);
             if (gapIdx !== null) {
                 scheduleOnRN(moveItem, item.idx, gapIdx, meta);
+                scheduleOnRN(moveKey, item.value.padId, item.value.id, item.idx, gapIdx);
             }
             scheduleOnRN(setGapIdx, null);
             pressed.value = false;
