@@ -27,8 +27,12 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
 
     const style = useAnimatedStyle(() => {
         return {
-            backgroundColor: pressed.value ? 'magenta' : 'orange',
-            transform: [{ translateX: offsetX.value }, { translateY: offsetY.value }],
+            backgroundColor: pressed.value ? withTiming('#FF8D28') : withTiming('#D9D9D9'),
+            transform: [
+                { translateX: offsetX.value },
+                { translateY: offsetY.value },
+                { scale: pressed.value ? withTiming(1.1) : withTiming(1) },
+            ],
         };
     });
 
@@ -96,11 +100,14 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
                         width: meta.ITEM_SIZE - meta.ITEM_BORDER * 2,
                         height: meta.ITEM_SIZE - meta.ITEM_BORDER * 2,
                         margin: meta.ITEM_BORDER,
+                        borderRadius: 12,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     },
                     style,
                 ]}
             >
-                <Text>{item.value.title}</Text>
+                <Text className='text-2xl'>{item.value.title}</Text>
             </Animated.View>
         </GestureDetector>
     );

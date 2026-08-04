@@ -32,6 +32,8 @@ export default function KeyPadEditorGrid({ data }: Props) {
                 HEIGHT: height,
                 TOP: pageY,
                 LEFT: pageX,
+                ITEM_SIZE: width / prev.COLUMN,
+                ITEM_BORDER: width / prev.COLUMN / 10,
             }));
         });
     };
@@ -53,9 +55,8 @@ export default function KeyPadEditorGrid({ data }: Props) {
                 onLayout={getLayout}
                 style={{
                     position: 'relative',
-                    width: gridMeta.COLUMN * gridMeta.ITEM_SIZE,
+                    width: '100%',
                     height: '100%',
-                    backgroundColor: 'skyblue',
                 }}
             >
                 {items.map((item) => (
