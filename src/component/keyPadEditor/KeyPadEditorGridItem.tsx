@@ -1,4 +1,6 @@
+import useEditorStore from '@/src/hook/useEditorStore';
 import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
+import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -14,6 +16,9 @@ interface Props {
 }
 
 export default function KeyPadEditorGridItem({ item, meta }: Props) {
+    const router = useRouter();
+    const setEditorKeyId = useEditorStore((s) => s.setEditorKeyId);
+
     const pressed = useSharedValue<boolean>(false);
     const offsetX = useSharedValue(0);
     const offsetY = useSharedValue(0);
@@ -66,6 +71,13 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
         offsetY.value = 0;
     }, [item.x, item.y]);
 
+    const tap = Gesture.Tap()
+        .maxDuration(250)
+        .onEnd(() => {
+            setEditorKeyId(item.id);
+            router.push('/KeyEditor');
+        });
+
     const pan = Gesture.Pan()
         .activateAfterLongPress(300)
         .onStart(() => {
@@ -89,8 +101,10 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
             pressed.value = false;
         });
 
+    const gesture = Gesture.Exclusive(pan, tap);
+
     return (
-        <GestureDetector gesture={pan}>
+        <GestureDetector gesture={gesture}>
             <Animated.View
                 style={[
                     {
