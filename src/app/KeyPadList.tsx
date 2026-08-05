@@ -1,24 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRouter } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Animated, Pressable, TextInput, View } from 'react-native';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
 import KeyPadListItem from '../component/keyPadList/KeyPadListItem';
-import useEditorStore from '../hook/useEditorStore';
 import useKeyPadsStore from '../hook/useKeyPadsStore';
 
 export default function KeyPadList() {
-    const router = useRouter();
     const navigation = useNavigation();
 
     const keyPads = useKeyPadsStore((s) => s.keyPads);
     const addKeyPad = useKeyPadsStore((s) => s.addKeyPad);
-    const deleteKeyPad = useKeyPadsStore((s) => s.deleteKeyPad);
     const setKeyPads = useKeyPadsStore((s) => s.setKeyPads);
-
-    const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
 
     const [showInput, setShowInput] = useState(false);
     const [newKeyPadTitle, setNewKeyPadTitle] = useState('');
@@ -89,7 +84,6 @@ export default function KeyPadList() {
             {showInput && (
                 <Animated.View
                     style={{
-                        // transform: [{ translateY: translateY.value }],
                         marginTop: 16,
                         backgroundColor: '#1E1E1E',
                         display: 'flex',
@@ -124,23 +118,6 @@ export default function KeyPadList() {
                     renderItem={KeyPadListItem}
                 />
             </GestureHandlerRootView>
-            {/* <FlatList
-                className='w-full py-4'
-                data={keyPads}
-                keyExtractor={(keyPad) => keyPad.id}
-                renderItem={({ item: keyPad }) => (
-                    <SwipeableKeyPadListItem
-                        keyPad={keyPad}
-                        onPress={() => {
-                            setEditorKeyPadId(keyPad.id);
-                            router.push('/KeyPadEditor');
-                        }}
-                        onDelete={() => {
-                            deleteKeyPad(keyPad.id);
-                        }}
-                    />
-                )}
-            /> */}
         </View>
     );
 }

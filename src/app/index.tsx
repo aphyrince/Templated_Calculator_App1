@@ -17,7 +17,6 @@ export default function Calculator() {
             </View>
 
             <View className='flex flex-row justify-start items-center gap-1 w-full h-20 p-2 bg-third '>
-                {/* <FlatList data={[]} renderItem={Item}></FlatList> */}
                 <KeyPadSelector />
 
                 <Pressable

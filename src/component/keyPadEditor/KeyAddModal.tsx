@@ -1,13 +1,24 @@
-import React, { useCallback, useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const MODAL_HEIGHT = 500;
 
 interface Props {
+    show: boolean;
     onSubmit: (name: string, value: number) => void;
 }
 
-export default function KeyAddModal({ onSubmit }: Props) {
+export default function KeyAddModal({ show, onSubmit }: Props) {
     const [name, setName] = useState<string>('');
     const [value, setValue] = useState<number | null>(null);
+
+    const modalTranslate = useSharedValue(MODAL_HEIGHT);
+
+    const modalAnimeStyle = useAnimatedStyle(() => ({
+        transform: [{ translateY: modalTranslate.value }],
+    }));
 
     const handleChange = useCallback((data: string | number) => {
         if (typeof data === 'string') {
@@ -20,29 +31,85 @@ export default function KeyAddModal({ onSubmit }: Props) {
     const handleSubmit = useCallback(() => {
         if (name === '' || value === null) return;
         onSubmit(name, value);
+        setName('');
+        setValue(null);
     }, [name, value, onSubmit]);
 
+    useEffect(() => {
+        if (show) {
+            modalTranslate.value = withTiming(0);
+        } else {
+            modalTranslate.value = withTiming(MODAL_HEIGHT);
+        }
+    }, [show]);
+
     return (
-        <View style={styles.modal}>
-            <Text>Add new Key</Text>
-            <TextInput value={name} onChangeText={(txt) => handleChange(txt)} />
+        <Animated.View style={[modalAnimeStyle, styles.modal]}>
+            <Text style={styles.title}>Add new Key</Text>
+            <TextInput style={styles.name} value={name} placeholder='key' onChangeText={(txt) => handleChange(txt)} />
             <TextInput
+                style={styles.value}
                 value={value?.toString() ?? ''}
+                placeholder='value'
+
                 keyboardType='number-pad'
                 onChangeText={(num) => {
                     Number.isInteger(Number(num));
                     setValue(Number(num));
                 }}
             />
-            <Button title='+' onPress={handleSubmit} />
-        </View>
+            <Pressable onPress={handleSubmit} style={styles.submitBtn}>
+                <Ionicons name={'add'} size={40} />
+            </Pressable>
+        </Animated.View>
     );
 }
 
 const styles = StyleSheet.create({
-    modal: { display: 'flex', flexDirection: 'column', width: '100%', height: '100%', padding: 16 },
-    title: {},
-    name: {},
-    value: {},
-    submitBtn: {},
+    modal: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        gap: 16,
+        flexDirection: 'column',
+        width: '100%',
+        height: MODAL_HEIGHT,
+        padding: 16,
+        backgroundColor: '#1E1E1E',
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+    },
+    title: {
+        width: '100%',
+        paddingHorizontal: 16,
+        color: 'orange',
+        fontSize: 24,
+    },
+    name: {
+        width: '100%',
+        padding: 16,
+        color: 'white',
+        fontSize: 20,
+        borderColor: '#757575',
+        borderWidth: 2,
+        borderRadius: 12,
+    },
+    value: {
+        width: '100%',
+        padding: 16,
+        color: 'white',
+        fontSize: 20,
+        borderColor: '#757575',
+        borderWidth: 2,
+        borderRadius: 12,
+    },
+    submitBtn: {
+        padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'orange',
+        borderRadius: 12,
+    },
 });
