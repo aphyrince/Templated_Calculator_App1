@@ -49,13 +49,14 @@ export default function KeyAddModal({ show, onSubmit }: Props) {
             <TextInput style={styles.name} value={name} placeholder='key' onChangeText={(txt) => handleChange(txt)} />
             <TextInput
                 style={styles.value}
-                value={value?.toString() ?? ''}
+                value={value?.toString()}
                 placeholder='value'
 
                 keyboardType='number-pad'
                 onChangeText={(num) => {
-                    Number.isInteger(Number(num));
-                    setValue(Number(num));
+                    if (Number.isInteger(Number(num))) {
+                        setValue(Number(num));
+                    }
                 }}
             />
             <Pressable onPress={handleSubmit} style={styles.submitBtn}>
