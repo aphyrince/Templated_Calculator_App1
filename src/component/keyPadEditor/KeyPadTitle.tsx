@@ -17,12 +17,18 @@ export default function KeyPadTitle({ keyPad, onEditTitle }: Props) {
         setIsEditMode(true);
     });
 
+    const handleChange = useCallback((text: string) => {
+        setTitle(text);
+    }, []);
+
     const handdleSubmit = useCallback(() => {
         console.log('handleSubmit!');
 
         setIsEditMode(false);
         if (title !== '' && keyPad.title !== title) {
             onEditTitle(title);
+        } else {
+            setTitle(keyPad.title);
         }
     }, [title, keyPad, onEditTitle]);
 
@@ -37,7 +43,7 @@ export default function KeyPadTitle({ keyPad, onEditTitle }: Props) {
                     <TextInput
                         className='w-full h-full p-4 items-center bg-third rounded-lg border-none color-accent text-2xl'
                         value={title}
-                        onChangeText={(text) => setTitle(text)}
+                        onChangeText={handleChange}
                         onBlur={handdleSubmit}
                     />
                     <Pressable className='absolute right-0 top-0 bottom-0 bg-green-500 h-full rounded-lg justify-center'>

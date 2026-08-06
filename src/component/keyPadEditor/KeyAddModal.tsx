@@ -41,14 +41,14 @@ export default function KeyAddModal({ show, onSubmit }: Props) {
         } else {
             modalTranslate.value = withTiming(MODAL_HEIGHT);
         }
-    }, [show]);
+    }, [show, modalTranslate]);
 
     return (
         <Animated.View style={[modalAnimeStyle, styles.modal]}>
             <Text style={styles.title}>Add new Key</Text>
-            <TextInput style={styles.name} value={name} placeholder='key' onChangeText={(txt) => handleChange(txt)} />
+            <TextInput style={styles.input} value={name} placeholder='key' onChangeText={(txt) => handleChange(txt)} />
             <TextInput
-                style={styles.value}
+                style={styles.input}
                 value={value?.toString()}
                 placeholder='value'
 
@@ -88,16 +88,7 @@ const styles = StyleSheet.create({
         color: 'orange',
         fontSize: 24,
     },
-    name: {
-        width: '100%',
-        padding: 16,
-        color: 'white',
-        fontSize: 20,
-        borderColor: '#757575',
-        borderWidth: 2,
-        borderRadius: 12,
-    },
-    value: {
+    input: {
         width: '100%',
         padding: 16,
         color: 'white',
