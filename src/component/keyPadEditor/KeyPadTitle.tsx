@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { scheduleOnRN } from 'react-native-worklets';
 
 interface Props {
     keyPad: KeyPad_Type;
@@ -12,10 +13,15 @@ export default function KeyPadTitle({ keyPad, onEditTitle }: Props) {
     const [isEditMode, setIsEditMode] = useState(false);
     const [title, setTitle] = useState(keyPad.title);
 
-    const longPress = Gesture.LongPress().onStart(() => {
-        console.log('start!');
-        setIsEditMode(true);
-    });
+    const longPress = Gesture.Pan()
+        .activateAfterLongPress(300)
+        .onBegin(() => {
+            console.log('begin!');
+        })
+        .onStart(() => {
+            console.log('start!');
+            scheduleOnRN(setIsEditMode, true);
+        });
 
     const handleChange = useCallback((text: string) => {
         setTitle(text);
