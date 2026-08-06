@@ -28,8 +28,9 @@ export default function KeyPadEditor() {
             if (!keyPad) return;
             toggleAddModal();
             addKey(keyPad.id, { title: name, value, type: 'Constant' });
+            setKeyPad(getKeyPadById(keyPad.id));
         },
-        [keyPad, addKey, toggleAddModal],
+        [keyPad, addKey, toggleAddModal, getKeyPadById],
     );
 
     useLayoutEffect(() => {
