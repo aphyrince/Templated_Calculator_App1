@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CalcPrinter from '../component/calculator/CalcPrinter';
+import CalcPrinter from '../component/calculator/Display';
 import KeyPad from '../component/calculator/KeyPad';
 import KeyPadSelector from '../component/calculator/KeyPadSelector';
 
@@ -15,7 +15,6 @@ export default function Calculator() {
 
             <View className='flex flex-row justify-start items-center gap-1 w-full h-20 p-2 bg-third '>
                 <KeyPadSelector />
-
                 <Pressable
                     onPress={() => {
                         router.push('/KeyPadList');

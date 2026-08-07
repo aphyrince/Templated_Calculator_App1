@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
-export default function CalcPrinter() {
+export default function Display() {
     return (
         <View className='flex flex-row justify-start items-center w-full h-1/4 bg-white/30 p-4'>
             <Text className='text-white text-4xl'>Printer</Text>
