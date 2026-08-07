@@ -15,11 +15,7 @@ export default function KeyPadTitle({ keyPad, onEditTitle }: Props) {
 
     const longPress = Gesture.Pan()
         .activateAfterLongPress(300)
-        .onBegin(() => {
-            console.log('begin!');
-        })
         .onStart(() => {
-            console.log('start!');
             scheduleOnRN(setIsEditMode, true);
         });
 
@@ -28,8 +24,6 @@ export default function KeyPadTitle({ keyPad, onEditTitle }: Props) {
     }, []);
 
     const handdleSubmit = useCallback(() => {
-        console.log('handleSubmit!');
-
         setIsEditMode(false);
         if (title !== '' && keyPad.title !== title) {
             onEditTitle(title);
