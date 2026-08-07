@@ -42,3 +42,5 @@ interface GridMeta {
     HEIGHT: number;
     ITEM_COUNT: number;
 }
+
+type Expression = (number | string | 'blank')[];
