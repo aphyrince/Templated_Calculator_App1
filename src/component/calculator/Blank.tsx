@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import useDisplayStore from '@/src/hook/useDisplayStore';
+import React, { useCallback, useState } from 'react';
+import { TextInput, View } from 'react-native';
 
-export default function Blank() {
-    const [value, setValue] = useState<number | null>(null);
+interface Props {
+    blankIdx: number;
+}
+
+export default function Blank({ blankIdx }: Props) {
+    const [value, setValue] = useState<string>('');
+    const setBlankOfIdx = useDisplayStore((s) => s.setBlankOfIdx);
+
+    const handleChangeText = useCallback(
+        (txt: string) => {
+            if (Number.isInteger(txt)) {
+                setValue(txt);
+                setBlankOfIdx(Number(txt), blankIdx);
+            } else {
+                setBlankOfIdx(null, blankIdx);
+            }
+        },
+        [blankIdx, setBlankOfIdx],
+    );
 
     return (
         <View>
-            <Text>{value || ''}</Text>
+            <TextInput keyboardType='number-pad' value={value} onChangeText={handleChangeText} />
         </View>
     );
 }
