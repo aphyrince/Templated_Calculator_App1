@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
 
 interface DisplayStore {
@@ -25,7 +25,8 @@ const useDisplayStore = create<DisplayStore>()((set) => ({
         set({ blanks: [...currBlanks] });
     },
     insertExp: (value: ExpValue, to: number = -1) => {
-        const newExp: Expression = { id: randomUUID(), value };
+        const id = randomUUID();
+        const newExp: Expression = { id, value };
         if (to === -1) set((s) => ({ exps: [...s.exps, newExp] }));
         else {
             set((s) => ({ exps: [...s.exps.slice(0, to), newExp, ...s.exps.slice(to)] }));
