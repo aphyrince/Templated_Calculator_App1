@@ -43,4 +43,9 @@ interface GridMeta {
     ITEM_COUNT: number;
 }
 
-type Expression = (number | string | 'blank')[];
+type ExpValue = number | string | 'Blank';
+
+interface Expression {
+    id: string;
+    value: ExpValue;
+}
