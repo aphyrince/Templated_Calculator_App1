@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface ExpressionStore {
+interface DisplayStore {
     expression: Expression[];
     blanks: (number | null)[];
     cursorIdx: number;
@@ -10,14 +10,14 @@ interface ExpressionStore {
     excute: () => number;
 }
 
-const useExpressionStore = create<ExpressionStore>()((set) => ({
+const useDisplayStore = create<DisplayStore>()((set) => ({
     expression: [],
     blanks: [],
     cursorIdx: 0,
     setExpression: (expression: Expression[]) => set({ expression }),
     setCursorIdx: (idx: number) => set({ cursorIdx: idx }),
     setBlankOfIdx: (value: number | null, idx: number) => {
-        const currBlanks = useExpressionStore.getState().blanks;
+        const currBlanks = useDisplayStore.getState().blanks;
         currBlanks[idx] = value;
         set({ blanks: [...currBlanks] });
     },
@@ -28,4 +28,4 @@ const useExpressionStore = create<ExpressionStore>()((set) => ({
     },
 }));
 
-export default useExpressionStore;
+export default useDisplayStore;
