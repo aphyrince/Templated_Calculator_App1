@@ -16,7 +16,7 @@ export default function KeyPad() {
     }, [selectedKeyPadId, getKeyPadById, keyPads]);
 
     return (
-        <View className='flex-1 flex-row flex-wrap justify-evenly gap-7 p-4'>
+        <View className='flex-1 flex-row flex-wrap justify-evenly gap-3 p-4'>
             {keyPad &&
                 keyPad.keys.map((key) => (
                     <Pressable
