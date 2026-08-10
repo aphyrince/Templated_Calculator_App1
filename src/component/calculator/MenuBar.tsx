@@ -5,8 +5,8 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 export default function MenuBar() {
-    const deleteLastExp = () => {};
-    const clearExps = () => {};
+    const deleteLastExp = useDisplayStore((s) => s.deleteLastExp);
+    const clearExps = useDisplayStore((s) => s.clearExps);
     const excute = useDisplayStore((s) => s.excute);
 
     return (
