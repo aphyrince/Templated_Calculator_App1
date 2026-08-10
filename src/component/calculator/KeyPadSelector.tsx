@@ -1,6 +1,4 @@
 import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 
@@ -27,14 +25,6 @@ export default function KeyPadSelector() {
                     )}
                 />
             </View>
-            <Pressable
-                onPress={() => {
-                    router.push('/KeyPadList');
-                }}
-                className='ml-auto flex justify-center items-center size-16 p-2 bg-accent rounded-xl font-extrabold text-xl color-black/90'
-            >
-                <Ionicons name='reorder-three' size={32} />
-            </Pressable>
         </View>
     );
 }

@@ -72,7 +72,7 @@ export default function Display() {
             key={`gap-${pos}`}
             onPress={() => setCursorIdx(pos)}
             className='items-center justify-center'
-            style={{ minHeight: 40, minWidth: 16, paddingHorizontal: 4 }}
+            style={{ minHeight: 40, minWidth: 16, paddingHorizontal: 2 }}
         >
             {cursorIdx === pos ? (
                 <Text className='text-white text-4xl'>|</Text>
@@ -97,24 +97,24 @@ export default function Display() {
             tokens.push(renderCursorGap(index));
             if (exp.value === 'Blank') {
                 tokens.push(
-                    <View key={exp.id} className='px-1 py-1'>
+                    <View key={exp.id}>
                         <Blank blankIdx={index} />
                     </View>,
                 );
             } else {
                 tokens.push(
-                    <Pressable key={exp.id} onPress={() => setCursorIdx(index + 1)} className='px-1 py-1'>
+                    <Pressable key={exp.id} onPress={() => setCursorIdx(index + 1)}>
                         <Text className='text-white text-4xl tracking-widest'>{String(exp.value)}</Text>
                     </Pressable>,
                 );
             }
         });
         tokens.push(renderCursorGap(exps.length));
-        return <View className='flex-row flex-wrap items-center gap-1'>{tokens}</View>;
+        return <View className='flex-row flex-wrap  gap-1'>{tokens}</View>;
     };
 
     return (
-        <View className='w-full bg-white/30 p-4 relative'>
+        <View className='w-full bg-white/30  relative'>
             {showTopEllipsis && (
                 <View className='absolute top-2 left-0 right-0 items-center z-10'>
                     <Text className='text-white text-xl'>...</Text>
@@ -141,15 +141,6 @@ export default function Display() {
                     <Text className='text-white text-2xl'>{String(result)}</Text>
                 </View>
             )}
-
-            <View className='mt-4 flex-row justify-end gap-2'>
-                <Pressable className='px-3 py-2 rounded-md bg-btn' onPress={deleteLastExp}>
-                    <Text className='text-white text-base'>DEL</Text>
-                </Pressable>
-                <Pressable className='px-3 py-2 rounded-md bg-red-500' onPress={clearExps}>
-                    <Text className='text-white text-base'>AC</Text>
-                </Pressable>
-            </View>
         </View>
     );
 }
