@@ -9,6 +9,8 @@ interface DisplayStore {
     setCursorIdx: (idx: number) => void;
     setBlankOfIdx: (value: number | null, idx: number) => void;
     insertExp: (value: ExpValue) => void;
+    deleteLastExp: () => void;
+    clearExps: () => void;
 
     excute: () => number;
 }
@@ -31,6 +33,12 @@ const useDisplayStore = create<DisplayStore>()((set) => ({
         else {
             set((s) => ({ exps: [...s.exps.slice(0, to), newExp, ...s.exps.slice(to)] }));
         }
+    },
+    deleteLastExp: () => {
+        set((s) => ({ exps: s.exps.slice(0, -1) }));
+    },
+    clearExps: () => {
+        set({ exps: [], blanks: [], cursorIdx: 0 });
     },
 
     excute: () => {
