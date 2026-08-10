@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
-import { stdNum, stdNum2 } from '../data/dummy';
+import { basicKeyPad } from '../data/basicKeyPad';
 
 interface KeyPadsStore {
     keyPads: KeyPad_Type[];
@@ -26,8 +26,8 @@ interface KeyPadsStore {
 }
 
 const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
-    keyPads: [stdNum, stdNum2],
-    selectedKeyPadId: stdNum.id,
+    keyPads: [basicKeyPad],
+    selectedKeyPadId: basicKeyPad.id,
 
     setKeyPads: (initialKeyPads: KeyPad_Type[]) => {
         useKeyPadsStore.setState({ keyPads: initialKeyPads, selectedKeyPadId: initialKeyPads[0].id });
