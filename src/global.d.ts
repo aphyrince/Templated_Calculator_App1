@@ -11,7 +11,7 @@ interface KeyPad_Type extends KeyPad_Ing_Type {
 
 interface Key_Ing_Type {
     title: string;
-    value: number;
+    value: number | string;
     type: 'Constant' | 'Formula' | 'Function';
     args?: number[];
     expression?: string;
