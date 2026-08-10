@@ -1,10 +1,13 @@
 import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
+import calculate from '../utils/calculate';
 
 interface DisplayStore {
     exps: Expression[];
     blanks: (number | null)[];
     cursorIdx: number;
+    excuteCache: number | null;
+
     setExps: (exps: Expression[]) => void;
     setCursorIdx: (idx: number) => void;
     setBlankOfIdx: (value: number | null, idx: number) => void;
@@ -12,13 +15,15 @@ interface DisplayStore {
     deleteLastExp: () => void;
     clearExps: () => void;
 
-    excute: () => number;
+    excute: () => void;
 }
 
 const useDisplayStore = create<DisplayStore>()((set) => ({
     exps: [],
     blanks: [],
     cursorIdx: 0,
+    excuteCache: null,
+
     setExps: (exps: Expression[]) => set({ exps }),
     setCursorIdx: (idx: number) => {
         const exps = useDisplayStore.getState().exps;
@@ -54,8 +59,9 @@ const useDisplayStore = create<DisplayStore>()((set) => ({
 
     excute: () => {
         console.log('Expression Store : excute!');
-
-        return 1;
+        const currExps = useDisplayStore.getState().exps as Expression[];
+        const result = calculate(currExps);
+        set({ excuteCache: result });
     },
 }));
 

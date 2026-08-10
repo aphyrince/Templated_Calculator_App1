@@ -17,7 +17,6 @@ const basicKeys: Key_Type[] = [
     { padId: basicPadId, id: randomUUID(), title: '-', value: '-', type: 'Constant' },
     { padId: basicPadId, id: randomUUID(), title: '0', value: 0, type: 'Constant' },
     { padId: basicPadId, id: randomUUID(), title: '.', value: '.', type: 'Constant' },
-    { padId: basicPadId, id: randomUUID(), title: '=', value: '=', type: 'Constant' },
     { padId: basicPadId, id: randomUUID(), title: '+', value: '+', type: 'Constant' },
 ];
 

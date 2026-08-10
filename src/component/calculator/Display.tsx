@@ -1,5 +1,5 @@
 import useDisplayStore from '@/src/hook/useDisplayStore';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import Blank from './Blank';
 
@@ -7,10 +7,11 @@ export default function Display() {
     const exps = useDisplayStore((s) => s.exps);
     const cursorIdx = useDisplayStore((s) => s.cursorIdx);
     const setCursorIdx = useDisplayStore((s) => s.setCursorIdx);
-    const deleteLastExp = useDisplayStore((s) => s.deleteLastExp);
-    const clearExps = useDisplayStore((s) => s.clearExps);
+    const excuteCache = useDisplayStore((s) => s.excuteCache);
+    const [prevExcuteCache, setPrevExcuteCache] = useState<number | null>(null);
     const scrollViewRef = useRef<ScrollView | null>(null);
     const [scrollHeight, setScrollHeight] = useState(0);
+    const [showResult, setShowResult] = useState(false);
 
     useEffect(() => {
         if (!scrollViewRef.current) return;
@@ -18,54 +19,6 @@ export default function Display() {
     }, [exps, cursorIdx]);
 
     const [showTopEllipsis, setShowTopEllipsis] = useState(false);
-
-    const expressionString = useMemo(() => {
-        return exps.map((exp) => (exp.value === 'Blank' ? '' : String(exp.value))).join('');
-    }, [exps]);
-
-    const result = useMemo(() => {
-        if (exps.some((exp) => exp.value === 'Blank')) return null;
-        if (!expressionString) return null;
-        if (!/^[0-9+\-*/.(),A-Za-z ]+$/.test(expressionString)) return null;
-
-        try {
-            const evalFn = new Function(
-                'Math',
-                'PI',
-                'E',
-                'sin',
-                'cos',
-                'tan',
-                'sqrt',
-                'abs',
-                'log',
-                'exp',
-                'pow',
-                'min',
-                'max',
-                `"use strict"; return (${expressionString})`,
-            );
-            const value = evalFn(
-                Math,
-                Math.PI,
-                Math.E,
-                Math.sin,
-                Math.cos,
-                Math.tan,
-                Math.sqrt,
-                Math.abs,
-                Math.log,
-                Math.exp,
-                Math.pow,
-                Math.min,
-                Math.max,
-            );
-            if (typeof value !== 'number' || !Number.isFinite(value)) return null;
-            return value;
-        } catch {
-            return null;
-        }
-    }, [expressionString, exps]);
 
     const renderCursorGap = (pos: number) => (
         <Pressable
@@ -113,8 +66,18 @@ export default function Display() {
         return <View className='flex-row flex-wrap  gap-1'>{tokens}</View>;
     };
 
+    useEffect(() => {
+        if (excuteCache !== prevExcuteCache) {
+            setPrevExcuteCache(excuteCache);
+            setShowResult(true);
+        } else {
+            setShowResult(false);
+        }
+        console.log('excuteCache : ', excuteCache, 'prevExcuteCAche : ', prevExcuteCache, 'showResult :', showResult);
+    }, [exps, excuteCache]);
+
     return (
-        <View className='w-full bg-white/30  relative'>
+        <View className='w-full h-[20%] bg-white/30  relative'>
             {showTopEllipsis && (
                 <View className='absolute top-2 left-0 right-0 items-center z-10'>
                     <Text className='text-white text-xl'>...</Text>
@@ -135,10 +98,10 @@ export default function Display() {
                 {renderExpression()}
             </ScrollView>
 
-            {result !== null && (
+            {showResult && excuteCache !== null && (
                 <View className='mt-3 items-end'>
                     <Text className='text-white/70 text-sm'>Result</Text>
-                    <Text className='text-white text-2xl'>{String(result)}</Text>
+                    <Text className='text-white text-2xl'>{String(excuteCache)}</Text>
                 </View>
             )}
         </View>
