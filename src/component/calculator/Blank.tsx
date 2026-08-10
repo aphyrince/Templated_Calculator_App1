@@ -12,10 +12,15 @@ export default function Blank({ blankIdx }: Props) {
 
     const handleChangeText = useCallback(
         (txt: string) => {
-            if (Number.isInteger(txt)) {
-                setValue(txt);
-                setBlankOfIdx(Number(txt), blankIdx);
+            const sanitized = txt.trim();
+            const numericValue = parseInt(sanitized, 10);
+            const isValidNumber = sanitized !== '' && /^[0-9]+$/.test(sanitized);
+
+            if (isValidNumber && Number.isInteger(numericValue)) {
+                setValue(sanitized);
+                setBlankOfIdx(numericValue, blankIdx);
             } else {
+                setValue(sanitized);
                 setBlankOfIdx(null, blankIdx);
             }
         },
