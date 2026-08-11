@@ -1,70 +1,62 @@
 import useDisplayStore from '@/src/hook/useDisplayStore';
-import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import Blank from './Blank';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+import ExpressionRenderer from './ExpressionRenderer';
 
 export default function Display() {
     const exps = useDisplayStore((s) => s.exps);
     const cursorIdx = useDisplayStore((s) => s.cursorIdx);
     const setCursorIdx = useDisplayStore((s) => s.setCursorIdx);
     const excuteCache = useDisplayStore((s) => s.excuteCache);
+
     const [prevExcuteCache, setPrevExcuteCache] = useState<number | null>(null);
-    const scrollViewRef = useRef<ScrollView | null>(null);
-    const [scrollHeight, setScrollHeight] = useState(0);
     const [showResult, setShowResult] = useState(false);
 
-    useEffect(() => {
-        if (!scrollViewRef.current) return;
-        scrollViewRef.current.scrollToEnd({ animated: true });
-    }, [exps, cursorIdx]);
+    // const renderCursorGap = (pos: number) => (
+    //     <Pressable
+    //         key={`gap-${pos}`}
+    //         onPress={() => setCursorIdx(pos)}
+    //         className='items-center justify-center'
+    //         style={{ minHeight: 40, minWidth: 16, paddingHorizontal: 2 }}
+    //     >
+    //         {cursorIdx === pos ? (
+    //             <Text className='text-white text-4xl'>|</Text>
+    //         ) : (
+    //             <View style={{ width: 16, height: 36 }} />
+    //         )}
+    //     </Pressable>
+    // );
 
-    const [showTopEllipsis, setShowTopEllipsis] = useState(false);
+    // const renderExpression = () => {
+    //     if (exps.length === 0) {
+    //         return (
+    //             <View className='flex-row items-center gap-1 flex-wrap'>
+    //                 {renderCursorGap(0)}
+    //                 <Text className='text-white/70 text-2xl'>0</Text>
+    //             </View>
+    //         );
+    //     }
 
-    const renderCursorGap = (pos: number) => (
-        <Pressable
-            key={`gap-${pos}`}
-            onPress={() => setCursorIdx(pos)}
-            className='items-center justify-center'
-            style={{ minHeight: 40, minWidth: 16, paddingHorizontal: 2 }}
-        >
-            {cursorIdx === pos ? (
-                <Text className='text-white text-4xl'>|</Text>
-            ) : (
-                <View style={{ width: 16, height: 36 }} />
-            )}
-        </Pressable>
-    );
-
-    const renderExpression = () => {
-        if (exps.length === 0) {
-            return (
-                <View className='flex-row items-center gap-1 flex-wrap'>
-                    {renderCursorGap(0)}
-                    <Text className='text-white/70 text-2xl'>0</Text>
-                </View>
-            );
-        }
-
-        const tokens: React.ReactNode[] = [];
-        exps.forEach((exp, index) => {
-            tokens.push(renderCursorGap(index));
-            if (exp.value === 'Blank') {
-                tokens.push(
-                    <View key={exp.id}>
-                        <Blank blankIdx={index} />
-                    </View>,
-                );
-            } else {
-                tokens.push(
-                    <Pressable key={exp.id} onPress={() => setCursorIdx(index + 1)}>
-                        <Text className='text-white text-4xl tracking-widest'>{String(exp.value)}</Text>
-                    </Pressable>,
-                );
-            }
-        });
-        tokens.push(renderCursorGap(exps.length));
-        return <View className='flex-row flex-wrap  gap-1'>{tokens}</View>;
-    };
+    //     const tokens: React.ReactNode[] = [];
+    //     exps.forEach((exp, index) => {
+    //         tokens.push(renderCursorGap(index));
+    //         if (exp.value === 'Blank') {
+    //             tokens.push(
+    //                 <View key={exp.id}>
+    //                     <Blank blankIdx={index} />
+    //                 </View>,
+    //             );
+    //         } else {
+    //             tokens.push(
+    //                 <Pressable key={exp.id} onPress={() => setCursorIdx(index + 1)}>
+    //                     <Text className='text-white text-4xl tracking-widest'>{String(exp.value)}</Text>
+    //                 </Pressable>,
+    //             );
+    //         }
+    //     });
+    //     tokens.push(renderCursorGap(exps.length));
+    //     return <View className='flex-row flex-wrap  gap-1'>{tokens}</View>;
+    // };
 
     useEffect(() => {
         if (excuteCache !== prevExcuteCache) {
@@ -78,25 +70,7 @@ export default function Display() {
 
     return (
         <View className='w-full h-[20%] bg-white/30  relative'>
-            {showTopEllipsis && (
-                <View className='absolute top-2 left-0 right-0 items-center z-10'>
-                    <Text className='text-white text-xl'>...</Text>
-                </View>
-            )}
-
-            <ScrollView
-                ref={(node) => {
-                    if (node) scrollViewRef.current = node;
-                }}
-                className='max-h-40'
-                contentContainerStyle={{ paddingBottom: 8 }}
-                showsVerticalScrollIndicator={false}
-                onContentSizeChange={(_, contentHeight) => setScrollHeight(contentHeight)}
-                onScroll={({ nativeEvent }) => setShowTopEllipsis(nativeEvent.contentOffset.y > 2)}
-                scrollEventThrottle={16}
-            >
-                {renderExpression()}
-            </ScrollView>
+            <ExpressionRenderer />
 
             {showResult && excuteCache !== null && (
                 <View className='mt-3 items-end'>
