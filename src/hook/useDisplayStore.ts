@@ -58,7 +58,6 @@ const useDisplayStore = create<DisplayStore>()((set) => ({
     },
 
     excute: () => {
-        console.log('Expression Store : excute!');
         const currExps = useDisplayStore.getState().exps as Expression[];
         const result = calculate(currExps);
         set({ excuteCache: result });

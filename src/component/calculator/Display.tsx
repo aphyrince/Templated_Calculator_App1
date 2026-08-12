@@ -1,7 +1,7 @@
 import useDisplayStore from '@/src/hook/useDisplayStore';
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import ExpressionRenderer from './ExpressionRenderer';
+import Expression from './Expression';
 
 export default function Display() {
     const exps = useDisplayStore((s) => s.exps);
@@ -65,12 +65,11 @@ export default function Display() {
         } else {
             setShowResult(false);
         }
-        console.log('excuteCache : ', excuteCache, 'prevExcuteCAche : ', prevExcuteCache, 'showResult :', showResult);
     }, [exps, excuteCache]);
 
     return (
         <View className='w-full h-[20%] bg-white/30  relative'>
-            <ExpressionRenderer />
+            <Expression />
 
             {showResult && excuteCache !== null && (
                 <View className='mt-3 items-end'>

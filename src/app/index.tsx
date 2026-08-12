@@ -6,7 +6,7 @@ import MenuBar from '../component/calculator/MenuBar';
 
 export default function Calculator() {
     return (
-        <SafeAreaView className='w-full h-full bg-primary'>
+        <SafeAreaView className='w-full h-full p-0 m-0 border-0 box-border bg-primary'>
             <Display />
             <KeyPadSelector />
             <MenuBar />
