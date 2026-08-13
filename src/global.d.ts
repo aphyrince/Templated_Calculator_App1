@@ -43,9 +43,25 @@ interface GridMeta {
     ITEM_COUNT: number;
 }
 
-type ExpValue = number | string | 'Blank';
-
 interface Expression {
     id: string;
-    value: ExpValue;
+    value: number | string | 'Blank';
+}
+
+interface Token {
+    id: string;
+    idx: number;
+    value: number | string | 'Blank' | null;
+}
+
+interface Cursor {
+    currIdx: number;
+    pos: Pos;
+}
+
+interface Pos {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }
