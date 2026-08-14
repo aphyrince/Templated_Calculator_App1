@@ -1,4 +1,4 @@
-export default function calculate(exps: Expression[]) {
+export default function calculate(exps: Token[]) {
     const expressionString = exps.map((exp) => (exp.value === 'Blank' ? '' : String(exp.value))).join('');
 
     if (exps.some((exp) => exp.value === 'Blank')) return null;
