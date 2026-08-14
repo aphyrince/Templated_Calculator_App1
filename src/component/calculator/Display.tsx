@@ -1,7 +1,7 @@
 import { DisplayState, useDisplayStore } from '@/src/hook/useDisplayStore';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import Expression from './Expression';
+import TokenRenderer from './TokenRenderer';
 
 export default function Display() {
     const tokens = useDisplayStore((s) => s.tokens);
@@ -21,7 +21,7 @@ export default function Display() {
 
     return (
         <View className='w-full h-[20%] bg-white/30  relative'>
-            <Expression />
+            <TokenRenderer />
 
             {showResult && result !== null && (
                 <View className='mt-3 items-end'>

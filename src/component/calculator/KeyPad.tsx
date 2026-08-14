@@ -1,9 +1,9 @@
-import useDisplayStore from '@/src/hook/useDisplayStore';
+import { insertToken } from '@/src/hook/useDisplayStore';
 import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-const parseExpressionTokens = (expression: string): ExpValue[] => {
+const parseExpressionTokens = (expression: string): Token['value'][] => {
     const parts = expression.split(/(Blank)/g).filter(Boolean);
     return parts.flatMap((part) => (part === 'Blank' ? ['Blank'] : part.length > 0 ? [part] : []));
 };
@@ -14,8 +14,6 @@ export default function KeyPad() {
     const getKeyPadById = useKeyPadsStore((s) => s.getKeyPadById);
     const [keyPad, setKeyPad] = useState<KeyPad_Type | undefined>(undefined);
 
-    const insertExp = useDisplayStore((s) => s.insertExp);
-
     useEffect(() => {
         setKeyPad(getKeyPadById(selectedKeyPadId));
     }, [selectedKeyPadId, getKeyPadById, keyPads]);
@@ -25,11 +23,11 @@ export default function KeyPad() {
             const expression = key.expression?.trim() ?? String(key.value);
             const tokens = parseExpressionTokens(expression);
             if (tokens.length === 0) return;
-            tokens.forEach((token) => insertExp(token));
+            tokens.forEach((token) => insertToken(token));
             return;
         }
 
-        insertExp(key.value);
+        insertToken(key.value);
     };
 
     return (
