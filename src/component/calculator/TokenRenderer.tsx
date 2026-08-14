@@ -1,38 +1,12 @@
 import { useDisplayStore } from '@/src/hook/useDisplayStore';
-import { randomUUID } from 'expo-crypto';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-type TokenRendererMeta = {
-    width: number;
-    itemWidth: number;
-    column: number;
-};
-
-const ITEM_WIDTH = 16;
+const TOKEN_WIDTH = 16;
 
 export default function TokenRenderer() {
     const tokens = useDisplayStore((s) => s.tokens);
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const layoutRef = useRef<View>(null);
-    const [layout, setLayout] = useState<TokenRendererMeta>({
-        width: 0,
-        itemWidth: ITEM_WIDTH,
-        column: 0,
-    });
-    const slots = Array.from({ length: 30 }, () => ({ id: randomUUID(), value: '' }));
-
-    const getLayout = () => {
-        layoutRef.current?.measure((x, y, width, height, pageX, pageY) => {
-            console.log(`width : ${width} , itemWidth : ${ITEM_WIDTH}, column : ${Math.floor(width / ITEM_WIDTH)}`);
-
-            setLayout({
-                width,
-                itemWidth: ITEM_WIDTH,
-                column: Math.floor(width / ITEM_WIDTH),
-            });
-        });
-    };
 
     useEffect(() => {
         if (!scrollViewRef.current) return;
@@ -48,10 +22,10 @@ export default function TokenRenderer() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 16 }}
         >
-            <View ref={layoutRef} onLayout={getLayout} style={styles.content}>
-                {slots.map((slot, idx) => (
-                    <Text style={styles.slot} key={slot.id}>
-                        {tokens.length > idx ? (tokens[idx].value ?? '') : ''}
+            <View style={styles.content}>
+                {tokens.map((token, idx) => (
+                    <Text style={styles.token} key={token.id}>
+                        {token.value}
                     </Text>
                 ))}
             </View>
@@ -67,8 +41,8 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         gap: 0,
     },
-    slot: {
-        width: ITEM_WIDTH,
+    token: {
+        width: TOKEN_WIDTH,
         height: 40,
         boxSizing: 'border',
         margin: 0,
