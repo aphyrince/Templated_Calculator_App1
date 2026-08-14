@@ -1,5 +1,4 @@
 import { randomUUID } from 'expo-crypto';
-import { produce } from 'immer';
 import { create } from 'zustand';
 import calculate from '../utils/calculate';
 
@@ -34,7 +33,7 @@ export const clearTokens = () => {
 };
 
 export const setCursorIdx = (idx: number) => {
-    store.setState(produce((state: DisplayState) => (state.cursor.currIdx = idx)));
+    store.setState((s) => ({ cursor: { ...s.cursor, currIdx: idx } }));
 };
 
 export const insertToken = (value: Token['value'], to?: number) => {
