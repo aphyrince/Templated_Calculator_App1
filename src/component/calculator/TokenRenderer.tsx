@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         margin: 0,
         textAlign: 'center',
         lineHeight: 40,
-        fontSize: 24,
+        fontSize: 28,
         color: 'white',
     },
 });
