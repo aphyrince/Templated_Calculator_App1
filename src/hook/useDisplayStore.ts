@@ -3,7 +3,7 @@ import { produce } from 'immer';
 import { create } from 'zustand';
 import calculate from '../utils/calculate';
 
-interface DisplayState {
+export interface DisplayState {
     tokens: Token[];
     cursor: Cursor;
     result: number | null;
