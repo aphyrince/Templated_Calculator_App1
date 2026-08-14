@@ -50,5 +50,6 @@ const styles = StyleSheet.create({
         lineHeight: 40,
         fontSize: 28,
         color: 'white',
+        fontFamily: 'GowunDodam',
     },
 });
