@@ -1,67 +1,79 @@
 import { randomUUID } from 'expo-crypto';
+import { produce } from 'immer';
 import { create } from 'zustand';
 import calculate from '../utils/calculate';
 
-interface DisplayStore {
-    exps: Expression[];
-    blanks: (number | null)[];
-    cursorIdx: number;
-    excuteCache: number | null;
-
-    setExps: (exps: Expression[]) => void;
-    setCursorIdx: (idx: number) => void;
-    setBlankOfIdx: (value: number | null, idx: number) => void;
-    insertExp: (value: ExpValue, to?: number) => void;
-    deleteLastExp: () => void;
-    clearExps: () => void;
-
-    excute: () => void;
+interface DisplayState {
+    tokens: Token[];
+    cursor: Cursor;
+    result: number | null;
 }
 
-const useDisplayStore = create<DisplayStore>()((set) => ({
-    exps: [],
-    blanks: [],
-    cursorIdx: 0,
-    excuteCache: null,
+const initialDisplayState: DisplayState = {
+    tokens: [],
+    cursor: { currIdx: 0, pos: { x: 0, y: 0, width: 0, height: 0 } },
+    result: null,
+};
 
-    setExps: (exps: Expression[]) => set({ exps }),
-    setCursorIdx: (idx: number) => {
-        const exps = useDisplayStore.getState().exps;
-        const nextIdx = Math.max(0, Math.min(idx, exps.length));
-        set({ cursorIdx: nextIdx });
-    },
-    setBlankOfIdx: (value: number | null, idx: number) => {
-        const currBlanks = useDisplayStore.getState().blanks;
-        currBlanks[idx] = value;
-        set({ blanks: [...currBlanks] });
-    },
-    insertExp: (value: ExpValue, to?: number) => {
-        const id = randomUUID();
-        const newExp: Expression = { id, value };
-        set((s) => {
-            const insertPos = to !== undefined ? to : s.cursorIdx;
-            const nextExps = [...s.exps.slice(0, insertPos), newExp, ...s.exps.slice(insertPos)];
-            return { exps: nextExps, cursorIdx: insertPos + 1 };
-        });
-    },
-    deleteLastExp: () => {
-        set((s) => {
-            if (s.exps.length === 0) return s;
-            const deleteIdx = s.cursorIdx > 0 ? s.cursorIdx - 1 : s.exps.length - 1;
-            const nextExps = [...s.exps.slice(0, deleteIdx), ...s.exps.slice(deleteIdx + 1)];
-            const nextCursor = Math.max(0, deleteIdx);
-            return { exps: nextExps, cursorIdx: nextCursor };
-        });
-    },
-    clearExps: () => {
-        set({ exps: [], blanks: [], cursorIdx: 0 });
-    },
-
-    excute: () => {
-        const currExps = useDisplayStore.getState().exps as Expression[];
-        const result = calculate(currExps);
-        set({ excuteCache: result });
-    },
+export const useDisplayStore = create<DisplayState>()(() => ({
+    ...initialDisplayState,
 }));
 
-export default useDisplayStore;
+const store = useDisplayStore;
+
+export const resetDisplayStore = () => {
+    store.setState(initialDisplayState);
+};
+
+export const setTokens = (tokens: Token[]) => {
+    store.setState({ tokens });
+};
+
+export const clearTokens = () => {
+    setTokens([]);
+};
+
+export const setCursorIdx = (idx: number) => {
+    store.setState(produce((state: DisplayState) => (state.cursor.currIdx = idx)));
+};
+
+export const insertToken = (value: Token['value'], to?: number) => {
+    const idx = to === undefined ? store.getState().cursor.currIdx : to;
+    const id = randomUUID();
+    const token: Token = {
+        id,
+        idx,
+        value,
+    };
+    const prevTokens = store.getState().tokens;
+    const nextTokens = [...prevTokens.slice(0, idx), token, ...prevTokens.slice(idx)];
+    const nextCursorIdx = idx + 1;
+
+    setTokens(nextTokens);
+    setCursorIdx(nextCursorIdx);
+};
+
+// 현재 커서가 위치해 있는 곳의 토큰을 삭제함.
+export const deleteToken = () => {
+    const prevTokens = store.getState().tokens;
+    if (prevTokens.length === 0) return;
+
+    const prevCursorIdx = store.getState().cursor.currIdx;
+
+    if (prevCursorIdx === 0) return;
+
+    const nextTokens = prevTokens.filter((token) => token.id !== prevTokens[prevCursorIdx - 1].id);
+
+    setTokens(nextTokens);
+    setCursorIdx(prevCursorIdx - 1);
+};
+
+export const calculateResult = () => {
+    const tokens = store.getState().tokens;
+    const result = calculate(tokens);
+    store.setState({ result });
+};
+
+export const setResultNull = () => {
+    store.setState({ result: null });
+};
