@@ -24,6 +24,24 @@ interface Key_Type extends Key_Ing_Type {
     padId: string;
 }
 
+interface KeyPad {
+    id: string;
+    name: string;
+    items: KeyItems[];
+    color?: string;
+    memo?: string;
+}
+
+interface KeyItem {
+    id: string;
+    padId: string;
+    name: string;
+    value: number | string;
+    type: 'Constant' | 'Function';
+    color?: string;
+    memo?: string;
+}
+
 interface GridItem {
     id: string;
     value: Key_Type;
@@ -41,11 +59,6 @@ interface GridMeta {
     WIDTH: number;
     HEIGHT: number;
     ITEM_COUNT: number;
-}
-
-interface Expression {
-    id: string;
-    value: number | string | 'Blank';
 }
 
 interface Token {
