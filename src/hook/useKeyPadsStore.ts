@@ -4,11 +4,15 @@ import { basicKeyPad2 } from '../data/basicKeyPad';
 interface KeyPadsState {
     keyPads: KeyPad[];
     selectedKeyPad: KeyPad | null;
+    editorKeyPad: KeyPad | null;
+    editorKeyItem: KeyItem | null;
 }
 
 const initialState: KeyPadsState = {
     keyPads: [basicKeyPad2],
     selectedKeyPad: null,
+    editorKeyPad: null,
+    editorKeyItem: null,
 };
 
 export const useKeyPadsStore = create<KeyPadsState>()(() => ({
@@ -87,4 +91,12 @@ export const setSelectedKeyPad = (keyPad: KeyPad) => {
 
 export const setSelectedKeyPadNull = () => {
     store.setState({ selectedKeyPad: null });
+};
+
+export const setEditorKeyPad = (keyPad: KeyPad | null) => {
+    store.setState({ editorKeyPad: keyPad });
+};
+
+export const setEditorKeyItem = (keyItem: KeyItem | null) => {
+    store.setState({ editorKeyItem: keyItem });
 };

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
-import useEditorStore from '../hook/useEditorStore';
 import { updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 const typeOptions: { label: string; value: KeyItem['type'] }[] = [
@@ -12,27 +11,14 @@ const colorOptions = ['#000000', '#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8
 const defaultColor = '#000000';
 
 export default function KeyEditor() {
-    const keyId = useEditorStore((s) => s.editorKeyId);
-    const padId = useEditorStore((s) => s.editorPadId);
-
-    const [keyData, setKeyData] = useState<KeyItem | null>(null);
-    const getKeyByIds = useKeyPadsStore((s) => s.getKeyByIds);
-
-    useEffect(() => {
-        if (!padId || !keyId) {
-            console.log('KeyEditor : padId or keyId is null!');
-            return;
-        }
-        setKeyData({ ...(getKeyByIds(padId, keyId) as KeyItem) });
-    }, [padId, keyId, setKeyData, getKeyByIds]);
+    const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
 
     const handleChange = (changed: Partial<KeyItem>) => {
-        setKeyData((prev) => (prev ? { ...prev, ...changed } : null));
-        if (!padId || !keyId) return;
-        updateKey(keyData, changed);
+        if (keyItem === null) return;
+        updateKey(keyItem, changed);
     };
 
-    if (!keyData) {
+    if (!keyItem) {
         return (
             <View className='flex-1 items-center justify-center bg-primary px-6'>
                 <Text className='text-white text-lg'>선택된 키가 없습니다.</Text>
@@ -40,8 +26,7 @@ export default function KeyEditor() {
         );
     }
 
-    const showArgs = keyData.type === 'Function';
-    const showExpression = keyData.type === 'Formula' || keyData.type === 'Function';
+    const showArgs = keyItem.type === 'Function';
 
     return (
         <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
@@ -50,9 +35,9 @@ export default function KeyEditor() {
                 <View className='flex-1'>
                     <TextInput
                         className='px-4 py-2 rounded-md bg-white'
-                        value={keyData.title}
-                        onChangeText={(title) => {
-                            handleChange({ title });
+                        value={keyItem.name}
+                        onChangeText={(name) => {
+                            handleChange({ name });
                         }}
                     />
                 </View>
@@ -63,7 +48,7 @@ export default function KeyEditor() {
                 <TextInput
                     className='flex-1 px-4 py-2 rounded-md bg-white'
                     keyboardType='numeric'
-                    value={String(keyData.value)}
+                    value={String(keyItem.value)}
                     onChangeText={(value) => {
                         handleChange({ value: parseInt(value) });
                     }}
@@ -74,7 +59,7 @@ export default function KeyEditor() {
                 <Text className='text-white text-2xl w-24'>type</Text>
                 <View className='flex-1 flex-row gap-2'>
                     {typeOptions.map((option) => {
-                        const selected = keyData.type === option.value;
+                        const selected = keyItem.type === option.value;
                         return (
                             <Pressable
                                 key={option.value}
@@ -102,33 +87,11 @@ export default function KeyEditor() {
                 </View>
             )}
 
-            {showExpression && (
-                <View className='flex justify-start items-start gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                    <View className='flex-row items-center gap-2'>
-                        <Text className='text-white text-2xl'>expression</Text>
-                        <Text className='text-white/80 text-sm'>숫자, 연산자, 빈칸([])만 입력 가능</Text>
-                    </View>
-                    <TextInput
-                        className='w-full px-4 py-2 rounded-md bg-white'
-                        placeholder={
-                            keyData.type === 'Function' ? '예: [ + 3] * 2 또는 func([] , [])' : '예: [ + 3] * 2'
-                        }
-                        value={keyData.expression}
-                        onChangeText={(expression) => handleChange({ expression })}
-                    />
-                    {keyData.type === 'Function' && (
-                        <Text className='text-white/80 text-sm'>
-                            이 경우에는 함수 이름과 빈칸만 보이거나, 빈칸과 수식이 함께 보일 수 있습니다.
-                        </Text>
-                    )}
-                </View>
-            )}
-
             <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
                 <Text className='text-white text-2xl w-24'>color</Text>
                 <View className='flex-1 flex-row flex-wrap gap-2'>
                     {colorOptions.map((option) => {
-                        const selected = keyData.color === option;
+                        const selected = keyItem.color === option;
                         return (
                             <Pressable
                                 key={option}
@@ -139,10 +102,10 @@ export default function KeyEditor() {
                         );
                     })}
                     <Pressable
-                        className={`px-3 py-2 rounded-md ${keyData.color === defaultColor ? 'bg-btn' : 'bg-white'}`}
+                        className={`px-3 py-2 rounded-md ${keyItem.color === defaultColor ? 'bg-btn' : 'bg-white'}`}
                         onPress={() => handleChange({ color: defaultColor })}
                     >
-                        <Text className={`${keyData.color === defaultColor ? 'text-white' : 'text-black'}`}>
+                        <Text className={`${keyItem.color === defaultColor ? 'text-white' : 'text-black'}`}>
                             default
                         </Text>
                     </Pressable>
@@ -153,7 +116,7 @@ export default function KeyEditor() {
                 <Text className='text-white text-2xl w-24'>memo</Text>
                 <TextInput
                     className='flex-1 px-4 py-2 rounded-md bg-white'
-                    value={keyData.memo}
+                    value={keyItem.memo}
                     onChangeText={(memo) => handleChange({ memo })}
                 />
             </View>

@@ -9,7 +9,7 @@ import KeyPadTitle from '../component/keyPadEditor/KeyPadTitle';
 import { addKeyItem, updateKeyPad, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
-    const selectedKeyPad = useKeyPadsStore((s) => s.selectedKeyPad);
+    const editorKeyPad = useKeyPadsStore((s) => s.editorKeyPad);
     const [showAddModal, setShowAddModal] = useState(false);
     const navigation = useNavigation();
 
@@ -19,9 +19,9 @@ export default function KeyPadEditor() {
 
     const handleAddKeyItem = useCallback(
         (name: string, value: number) => {
-            if (selectedKeyPad === null) return;
+            if (editorKeyPad === null) return;
             const newItem: KeyItem = {
-                padId: selectedKeyPad.id,
+                padId: editorKeyPad.id,
                 id: randomUUID(),
                 name,
                 value,
@@ -29,20 +29,20 @@ export default function KeyPadEditor() {
             };
             addKeyItem(newItem);
         },
-        [selectedKeyPad],
+        [editorKeyPad],
     );
 
     const handleEditKeyPadName = useCallback(
         (name: string) => {
-            if (selectedKeyPad === null) return;
-            updateKeyPad(selectedKeyPad.id, { name });
+            if (editorKeyPad === null) return;
+            updateKeyPad(editorKeyPad.id, { name });
         },
-        [selectedKeyPad],
+        [editorKeyPad],
     );
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: selectedKeyPad?.name ?? 'KeyPad?',
+            headerTitle: editorKeyPad?.name ?? 'KeyPad?',
             headerBackButtonDisplayMode: 'minimal',
             headerRight: () => (
                 <Pressable className='w-20 flex justify-center items-center' onPress={toggleAddModal}>
@@ -50,12 +50,12 @@ export default function KeyPadEditor() {
                 </Pressable>
             ),
         });
-    }, [navigation, toggleAddModal, selectedKeyPad]);
+    }, [navigation, toggleAddModal, editorKeyPad]);
 
     return (
         <View className='flex-1 flex gap-4 pt-6 bg-primary '>
-            {selectedKeyPad && <KeyPadTitle onEditKeyPadName={handleEditKeyPadName} />}
-            {selectedKeyPad && <KeyPadEditorGrid data={selectedKeyPad.items} />}
+            {editorKeyPad && <KeyPadTitle onEditKeyPadName={handleEditKeyPadName} />}
+            {editorKeyPad && <KeyPadEditorGrid data={editorKeyPad.items} />}
             <KeyAddModal show={showAddModal} onSubmit={handleAddKeyItem} />
         </View>
     );

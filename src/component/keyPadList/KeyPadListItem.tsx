@@ -1,5 +1,4 @@
-import useEditorStore from '@/src/hook/useEditorStore';
-import { deleteKeyPad } from '@/src/hook/useKeyPadsStore';
+import { deleteKeyPad, setEditorKeyPad } from '@/src/hook/useKeyPadsStore';
 
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
@@ -8,16 +7,14 @@ import { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlis
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 export default function KeyPadListItem({ item, drag, isActive }: RenderItemParams<KeyPad>) {
-    const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
-
     const handleDelete = useCallback(() => {
         deleteKeyPad(item.id);
     }, [item]);
 
     const handleClick = useCallback(() => {
-        setEditorKeyPadId(item.id);
+        setEditorKeyPad(item);
         router.push('/KeyPadEditor');
-    }, [setEditorKeyPadId, item]);
+    }, [item]);
 
     return (
         <ScaleDecorator>
