@@ -27,7 +27,7 @@ interface Key_Type extends Key_Ing_Type {
 interface KeyPad {
     id: string;
     name: string;
-    items: KeyItems[];
+    items: KeyItem[];
     color?: string;
     memo?: string;
 }
