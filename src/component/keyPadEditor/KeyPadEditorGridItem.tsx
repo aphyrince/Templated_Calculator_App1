@@ -1,5 +1,5 @@
 import useEditorStore from '@/src/hook/useEditorStore';
-import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
+import { moveKey } from '@/src/hook/useKeyPadsStore';
 import { router } from 'expo-router';
 import React, { useEffect } from 'react';
 import { Text } from 'react-native';
@@ -27,7 +27,6 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
     const setDraggingIdx = useGridStore((s) => s.setDraggingIdx);
     const setGapIdx = useGridStore((s) => s.setGapIdx);
     const moveItem = useGridStore((s) => s.moveItem);
-    const moveKey = useKeyPadsStore((s) => s.moveKey);
 
     const style = useAnimatedStyle(() => {
         return {
@@ -94,7 +93,7 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
             offsetY.value = withTiming(0);
             if (gapIdx !== null) {
                 scheduleOnRN(moveItem, item.idx, gapIdx, meta);
-                scheduleOnRN(moveKey, item.value.padId, item.value.id, item.idx, gapIdx);
+                scheduleOnRN(moveKey, item.keyItem, gapIdx);
             }
             scheduleOnRN(setGapIdx, null);
             pressed.value = false;
@@ -120,7 +119,7 @@ export default function KeyPadEditorGridItem({ item, meta }: Props) {
                     style,
                 ]}
             >
-                <Text className='text-2xl'>{item.value.title}</Text>
+                <Text className='text-2xl'>{item.keyItem.name}</Text>
             </Animated.View>
         </GestureDetector>
     );

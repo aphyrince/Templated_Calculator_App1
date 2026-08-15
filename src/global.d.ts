@@ -1,28 +1,28 @@
-interface KeyPad_Ing_Type {
-    title: string;
-    keys: Key_Type[];
-    color?: string;
-    memo?: string;
-}
+// interface KeyPad_Ing_Type {
+//     title: string;
+//     keys: Key_Type[];
+//     color?: string;
+//     memo?: string;
+// }
 
-interface KeyPad_Type extends KeyPad_Ing_Type {
-    id: string;
-}
+// interface KeyPad_Type extends KeyPad_Ing_Type {
+//     id: string;
+// }
 
-interface Key_Ing_Type {
-    title: string;
-    value: number | string;
-    type: 'Constant' | 'Formula' | 'Function';
-    args?: number[];
-    expression?: string;
-    color?: string;
-    memo?: string;
-}
+// interface Key_Ing_Type {
+//     title: string;
+//     value: number | string;
+//     type: 'Constant' | 'Formula' | 'Function';
+//     args?: number[];
+//     expression?: string;
+//     color?: string;
+//     memo?: string;
+// }
 
-interface Key_Type extends Key_Ing_Type {
-    id: string;
-    padId: string;
-}
+// interface Key_Type extends Key_Ing_Type {
+//     id: string;
+//     padId: string;
+// }
 
 interface KeyPad {
     id: string;
@@ -44,7 +44,7 @@ interface KeyItem {
 
 interface GridItem {
     id: string;
-    value: Key_Type;
+    keyItem: KeyItem;
     x: number;
     y: number;
     idx: number;

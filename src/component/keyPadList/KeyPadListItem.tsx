@@ -1,5 +1,5 @@
 import useEditorStore from '@/src/hook/useEditorStore';
-import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
+import { deleteKeyPad } from '@/src/hook/useKeyPadsStore';
 
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
@@ -7,13 +7,12 @@ import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 import { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
-export default function KeyPadListItem({ item, drag, isActive }: RenderItemParams<KeyPad_Type>) {
-    const deleteKeyPad = useKeyPadsStore((s) => s.deleteKeyPad);
+export default function KeyPadListItem({ item, drag, isActive }: RenderItemParams<KeyPad>) {
     const setEditorKeyPadId = useEditorStore((s) => s.setEditorPadId);
 
     const handleDelete = useCallback(() => {
         deleteKeyPad(item.id);
-    }, [deleteKeyPad, item]);
+    }, [item]);
 
     const handleClick = useCallback(() => {
         setEditorKeyPadId(item.id);
@@ -45,7 +44,7 @@ export default function KeyPadListItem({ item, drag, isActive }: RenderItemParam
                     className='p-4 mb-4 w-full rounded-lg bg-btn'
                     onPress={handleClick}
                 >
-                    <Text className='text-xl'>{item.title}</Text>
+                    <Text className='text-xl'>{item.name}</Text>
                 </TouchableOpacity>
             </Swipeable>
         </ScaleDecorator>

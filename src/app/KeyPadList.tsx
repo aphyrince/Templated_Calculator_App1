@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { randomUUID } from 'expo-crypto';
 import { useNavigation } from 'expo-router';
 import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
@@ -6,15 +7,11 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import KeyPadAddModal from '../component/keyPadList/KeyPadAddModal';
 import KeyPadListItem from '../component/keyPadList/KeyPadListItem';
-import { useKeyPadsStore } from '../hook/useKeyPadsStore';
+import { addKeyPad, setKeyPads, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadList() {
     const navigation = useNavigation();
-
     const keyPads = useKeyPadsStore((s) => s.keyPads);
-    const addKeyPad = useKeyPadsStore((s) => s.addKeyPad);
-    const setKeyPads = useKeyPadsStore((s) => s.setKeyPads);
-
     const [showAddModal, setShowAddModal] = useState(false);
 
     const toggleAddModal = useCallback(() => {
@@ -22,15 +19,16 @@ export default function KeyPadList() {
     }, []);
 
     const handleAddKeyPad = useCallback(
-        (title: string) => {
-            const newKeyPad: KeyPad_Ing_Type = {
-                title,
-                keys: [],
+        (name: string) => {
+            const newKeyPad: KeyPad = {
+                id: randomUUID(),
+                name,
+                items: [],
             };
             addKeyPad(newKeyPad);
             toggleAddModal();
         },
-        [addKeyPad, toggleAddModal],
+        [toggleAddModal],
     );
 
     useLayoutEffect(() => {

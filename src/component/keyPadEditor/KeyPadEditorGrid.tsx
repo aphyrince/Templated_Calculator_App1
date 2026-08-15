@@ -6,7 +6,7 @@ import KeyPadEditorGridItem from './KeyPadEditorGridItem';
 import { calcPosFromIdx } from './calcPosFromIdx';
 
 interface Props {
-    data: Key_Type[];
+    data: KeyItem[];
 }
 
 export default function KeyPadEditorGrid({ data }: Props) {
@@ -41,7 +41,7 @@ export default function KeyPadEditorGrid({ data }: Props) {
     useEffect(() => {
         const initialItems = data.map((value, idx) => ({
             id: value.id,
-            value,
+            keyItem: value,
             idx,
             ...calcPosFromIdx(idx, gridMeta),
         }));

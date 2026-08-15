@@ -1,52 +1,48 @@
 import { Ionicons } from '@expo/vector-icons';
+import { randomUUID } from 'expo-crypto';
 import { useNavigation } from 'expo-router';
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import KeyAddModal from '../component/keyPadEditor/KeyAddModal';
 import KeyPadEditorGrid from '../component/keyPadEditor/KeyPadEditorGrid';
 import KeyPadTitle from '../component/keyPadEditor/KeyPadTitle';
-import useEditorStore from '../hook/useEditorStore';
-import { useKeyPadsStore } from '../hook/useKeyPadsStore';
+import { addKeyItem, updateKeyPad, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
-    const padId = useEditorStore((s) => s.editorPadId);
-    const [keyPad, setKeyPad] = useState<KeyPad_Type | undefined>(undefined);
-    const [keys, setKeys] = useState<Key_Type[] | undefined>(keyPad?.keys);
-    const getKeyPadById = useKeyPadsStore((s) => s.getKeyPadById);
-    const setKeyId = useEditorStore((s) => s.setEditorKeyId);
-    const addKey = useKeyPadsStore((s) => s.addKey);
-    const updateKeyPad = useKeyPadsStore((s) => s.updateKeyPad);
-
+    const selectedKeyPad = useKeyPadsStore((s) => s.selectedKeyPad);
     const [showAddModal, setShowAddModal] = useState(false);
-
     const navigation = useNavigation();
 
     const toggleAddModal = useCallback(() => {
         setShowAddModal((prev) => !prev);
     }, []);
 
-    const handleAdd = useCallback(
+    const handleAddKeyItem = useCallback(
         (name: string, value: number) => {
-            if (!keyPad) return;
-            toggleAddModal();
-            addKey(keyPad.id, { title: name, value, type: 'Constant' });
-            setKeyPad(getKeyPadById(keyPad.id));
+            if (selectedKeyPad === null) return;
+            const newItem: KeyItem = {
+                padId: selectedKeyPad.id,
+                id: randomUUID(),
+                name,
+                value,
+                type: 'Constant',
+            };
+            addKeyItem(newItem);
         },
-        [keyPad, addKey, toggleAddModal, getKeyPadById],
+        [selectedKeyPad],
     );
 
-    const handleEditTitle = useCallback(
-        (title: string) => {
-            if (padId) {
-                updateKeyPad(padId, { title });
-            }
+    const handleEditKeyPadName = useCallback(
+        (name: string) => {
+            if (selectedKeyPad === null) return;
+            updateKeyPad(selectedKeyPad.id, { name });
         },
-        [padId, updateKeyPad],
+        [selectedKeyPad],
     );
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: keyPad?.title ?? 'KeyPad?',
+            headerTitle: selectedKeyPad?.name ?? 'KeyPad?',
             headerBackButtonDisplayMode: 'minimal',
             headerRight: () => (
                 <Pressable className='w-20 flex justify-center items-center' onPress={toggleAddModal}>
@@ -54,28 +50,13 @@ export default function KeyPadEditor() {
                 </Pressable>
             ),
         });
-    }, [navigation, keyPad, toggleAddModal]);
-
-    useEffect(() => {
-        if (!padId) {
-            console.log('current padId is null!');
-            return;
-        }
-        setKeyPad(getKeyPadById(padId));
-    }, [padId, getKeyPadById, setKeyId]);
-
-    useEffect(() => {
-        if (!keyPad) {
-            return;
-        }
-        setKeys(keyPad.keys);
-    }, [keyPad]);
+    }, [navigation, toggleAddModal, selectedKeyPad]);
 
     return (
         <View className='flex-1 flex gap-4 pt-6 bg-primary '>
-            {keyPad && <KeyPadTitle keyPad={keyPad} onEditTitle={handleEditTitle} />}
-            {keyPad && keys && <KeyPadEditorGrid data={keys} />}
-            <KeyAddModal show={showAddModal} onSubmit={handleAdd} />
+            {selectedKeyPad && <KeyPadTitle onEditKeyPadName={handleEditKeyPadName} />}
+            {selectedKeyPad && <KeyPadEditorGrid data={selectedKeyPad.items} />}
+            <KeyAddModal show={showAddModal} onSubmit={handleAddKeyItem} />
         </View>
     );
 }

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import useEditorStore from '../hook/useEditorStore';
-import { useKeyPadsStore } from '../hook/useKeyPadsStore';
+import { updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
-const typeOptions: { label: string; value: Key_Ing_Type['type'] }[] = [
+const typeOptions: { label: string; value: KeyItem['type'] }[] = [
     { label: 'Constant', value: 'Constant' },
-    { label: 'Formula', value: 'Formula' },
     { label: 'Function', value: 'Function' },
 ];
 
@@ -16,22 +15,21 @@ export default function KeyEditor() {
     const keyId = useEditorStore((s) => s.editorKeyId);
     const padId = useEditorStore((s) => s.editorPadId);
 
-    const [keyData, setKeyData] = useState<Key_Type | null>(null);
+    const [keyData, setKeyData] = useState<KeyItem | null>(null);
     const getKeyByIds = useKeyPadsStore((s) => s.getKeyByIds);
-    const updateKey = useKeyPadsStore((s) => s.updateKey);
 
     useEffect(() => {
         if (!padId || !keyId) {
             console.log('KeyEditor : padId or keyId is null!');
             return;
         }
-        setKeyData({ ...(getKeyByIds(padId, keyId) as Key_Type) });
+        setKeyData({ ...(getKeyByIds(padId, keyId) as KeyItem) });
     }, [padId, keyId, setKeyData, getKeyByIds]);
 
-    const handleChange = (changed: Partial<Key_Type>) => {
+    const handleChange = (changed: Partial<KeyItem>) => {
         setKeyData((prev) => (prev ? { ...prev, ...changed } : null));
         if (!padId || !keyId) return;
-        updateKey(padId, keyId, changed);
+        updateKey(keyData, changed);
     };
 
     if (!keyData) {

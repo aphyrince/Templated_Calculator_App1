@@ -21,6 +21,10 @@ export const resetKeyPads = () => {
     store.setState(initialState);
 };
 
+export const setKeyPads = (keyPads: KeyPad[]) => {
+    store.setState({ keyPads });
+};
+
 export const addKeyPad = (keyPad: KeyPad) => {
     store.setState((s) => ({ keyPads: [...s.keyPads, keyPad] }));
 };
