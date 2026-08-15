@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import useEditorStore from '../hook/useEditorStore';
-import useKeyPadsStore from '../hook/useKeyPadsStore';
+import { useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 const typeOptions: { label: string; value: Key_Ing_Type['type'] }[] = [
     { label: 'Constant', value: 'Constant' },

@@ -1,136 +1,86 @@
-import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
-import { basicKeyPad } from '../data/basicKeyPad';
+import { basicKeyPad2 } from '../data/basicKeyPad';
 
-interface KeyPadsStore {
-    keyPads: KeyPad_Type[];
-    selectedKeyPadId: string;
-
-    //초기화용
-    setKeyPads: (initialKeyPads: KeyPad_Type[]) => void;
-
-    addKeyPad: (newKeyPad: KeyPad_Ing_Type) => void;
-    deleteKeyPad: (id: string) => void;
-    updateKeyPad: (id: string, data: Partial<KeyPad_Type>) => void;
-    moveKeyPad: (id: string, to: number) => void;
-
-    addKey: (padId: string, newKeyNoId: Key_Ing_Type) => void;
-    deleteKey: (padId: string, keyId: string) => void;
-    updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => void;
-    moveKey: (padId: string, keyId: string, from: number, to: number) => void;
-
-    setSelectedKeyPadId: (keyPadId: string) => void;
-    getKeyPadById: (keyPadId: string) => KeyPad_Type | undefined;
-    getSelectedKeyPad: () => KeyPad_Type | undefined;
-    getKeyByIds: (padId: string, keyId: string) => Key_Type | undefined;
+interface KeyPadsState {
+    keyPads: KeyPad[];
+    selectedKeyPad: KeyPad | null;
 }
 
-const useKeyPadsStore = create<KeyPadsStore>()((set) => ({
-    keyPads: [basicKeyPad],
-    selectedKeyPadId: basicKeyPad.id,
+const initialState: KeyPadsState = {
+    keyPads: [basicKeyPad2],
+    selectedKeyPad: null,
+};
 
-    setKeyPads: (initialKeyPads: KeyPad_Type[]) => {
-        useKeyPadsStore.setState({ keyPads: initialKeyPads, selectedKeyPadId: initialKeyPads[0].id });
-    },
-
-    addKeyPad: (newKeyPadNoId: KeyPad_Ing_Type) => {
-        const id = randomUUID();
-        const newKeyPad: KeyPad_Type = { id, ...newKeyPadNoId };
-        set((s) => ({ keyPads: [...s.keyPads, newKeyPad] }));
-    },
-
-    deleteKeyPad: (id: string) => {
-        set((s) => ({ keyPads: [...s.keyPads.filter((keyPad) => keyPad.id !== id)] }));
-    },
-
-    updateKeyPad: (id: string, data: Partial<KeyPad_Type>) => {
-        set((s) => ({
-            keyPads: [...s.keyPads.map((keyPad) => (keyPad.id === id ? { ...keyPad, ...data } : keyPad))],
-        }));
-    },
-
-    moveKeyPad: (id: string, to: number) => {
-        set((s) => {
-            const from = s.keyPads.findIndex((keyPad) => keyPad.id === id);
-            const target = s.keyPads[from];
-            const targetDeletedList = [...s.keyPads.filter((keyPad) => keyPad.id !== id)];
-            // 타겟을 뺐으니
-            if (to > from) to -= 1;
-            const frontList = targetDeletedList.slice(0, to);
-            const backList = targetDeletedList.slice(to);
-            const resultList = [...frontList, target, ...backList];
-            return { keyPads: resultList };
-        });
-    },
-
-    addKey: (padId: string, newKeyNoId: Key_Ing_Type) => {
-        const id = randomUUID();
-        const newKey: Key_Type = { id, padId, ...newKeyNoId };
-        set((s) => ({
-            keyPads: [
-                ...s.keyPads.map((keypad) =>
-                    keypad.id === padId ? { ...keypad, keys: [...keypad.keys, newKey] } : keypad,
-                ),
-            ],
-        }));
-    },
-
-    deleteKey: (padId: string, keyId: string) => {
-        set((s) => ({
-            keyPads: [
-                ...s.keyPads.map((keypad) =>
-                    keypad.id === padId
-                        ? { ...keypad, keys: [...keypad.keys.filter((key) => key.id !== keyId)] }
-                        : keypad,
-                ),
-            ],
-        }));
-    },
-
-    updateKey: (padId: string, keyId: string, data: Partial<Key_Type>) => {
-        set((s) => {
-            const nextKeyPads = s.keyPads.map((keypad) =>
-                keypad.id === padId
-                    ? {
-                          ...keypad,
-                          keys: keypad.keys.map((key) => (key.id === keyId ? { ...key, ...data } : key)),
-                      }
-                    : keypad,
-            );
-
-            return { keyPads: nextKeyPads };
-        });
-    },
-
-    moveKey: (padId: string, keyId: string, from: number, to: number) => {
-        const targetKeyPad = useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === padId);
-        if (targetKeyPad === undefined) {
-            console.log('useKeyPadsStore : moveKey Error : no targetKeyPad');
-            return set((s) => s);
-        }
-        const targetKey = targetKeyPad.keys[from];
-        const deletedKeys = targetKeyPad.keys.filter((key) => key.id !== keyId);
-        const movedKeys = [...deletedKeys.slice(0, to), targetKey, ...deletedKeys.slice(to)];
-        const movedKeyPad = { ...targetKeyPad, keys: movedKeys };
-
-        set((s) => ({ keyPads: s.keyPads.map((keyPad) => (keyPad.id === padId ? movedKeyPad : keyPad)) }));
-    },
-    setSelectedKeyPadId: (keyPadId: string) => {
-        useKeyPadsStore.setState({ selectedKeyPadId: keyPadId });
-    },
-    getKeyPadById: (keyPadId: string): KeyPad_Type | undefined => {
-        return useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === keyPadId);
-    },
-    getSelectedKeyPad: (): KeyPad_Type | undefined => {
-        const id = useKeyPadsStore.getState().selectedKeyPadId;
-        return useKeyPadsStore.getState().getKeyPadById(id);
-    },
-    getKeyByIds: (padId: string, keyId: string): Key_Type | undefined => {
-        return useKeyPadsStore
-            .getState()
-            .getKeyPadById(padId)
-            ?.keys.find((key) => key.id === keyId);
-    },
+export const useKeyPadsStore = create<KeyPadsState>()(() => ({
+    ...initialState,
 }));
 
-export default useKeyPadsStore;
+const store = useKeyPadsStore;
+
+export const resetKeyPads = () => {
+    store.setState(initialState);
+};
+
+export const addKeyPad = (keyPad: KeyPad) => {
+    store.setState((s) => ({ keyPads: [...s.keyPads, keyPad] }));
+};
+
+export const deleteKeyPad = (id: string) => {
+    const prevKeyPads = store.getState().keyPads;
+    const nextKeyPads = [...prevKeyPads.filter((keyPad) => keyPad.id !== id)];
+    store.setState({ keyPads: nextKeyPads });
+};
+
+export const updateKeyPad = (id: string, data: Partial<KeyPad>) => {
+    const prevKeyPads = store.getState().keyPads;
+    const nextKeyPads = [...prevKeyPads.map((keyPad) => (keyPad.id === id ? { ...keyPad, ...data } : keyPad))];
+    store.setState({ keyPads: nextKeyPads });
+};
+
+export const moveKeyPad = (id: string, to: number) => {
+    const prevKeypads = store.getState().keyPads;
+    const from = prevKeypads.findIndex((keyPad) => keyPad.id === id);
+    const targetKeyPad = prevKeypads[from];
+    const targetRemovedKeyPads = prevKeypads.filter((keyPad) => keyPad.id !== id);
+
+    if (to > from) to--;
+
+    const nextKeyPads = [...targetRemovedKeyPads.slice(0, to), targetKeyPad, ...targetRemovedKeyPads.slice(to)];
+    store.setState({ keyPads: nextKeyPads });
+};
+
+export const addKeyItem = (keyItem: KeyItem) => {
+    const prevKeyPads = store.getState().keyPads;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const nextItems: KeyItem[] = [...targetKeyPad.items, keyItem];
+    updateKeyPad(keyItem.padId, { items: nextItems });
+};
+
+export const deleteKey = (keyItem: KeyItem) => {
+    const prevKeyPads = store.getState().keyPads;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const nextItems: KeyItem[] = targetKeyPad.items.filter((item) => item.id !== keyItem.id);
+    updateKeyPad(keyItem.padId, { items: nextItems });
+};
+
+export const updateKey = (keyItem: KeyItem, data: Partial<KeyItem>) => {
+    const prevKeyPads = store.getState().keyPads;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const nextItems = targetKeyPad.items.map((item) => (item.id === keyItem.id ? { ...item, ...data } : item));
+    updateKeyPad(keyItem.padId, { items: nextItems });
+};
+
+export const moveKey = (keyItem: KeyItem, to: number) => {
+    const prevItems = store.getState().keyPads.find((keyPad) => keyPad.id === keyItem.id)?.items as KeyItem[];
+    const targetDeletedItems = prevItems.filter((item) => item.id !== keyItem.id);
+    const nextItems = [...targetDeletedItems.slice(0, to), keyItem, ...targetDeletedItems.slice(to)];
+    updateKeyPad(keyItem.padId, { items: nextItems });
+};
+
+export const setSelectedKeyPad = (keyPad: KeyPad) => {
+    store.setState({ selectedKeyPad: keyPad });
+};
+
+export const setSelectedKeyPadNull = () => {
+    store.setState({ selectedKeyPad: null });
+};

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { stdNum, stdNum2 } from '../data/dummy';
 import '../global.css';
 import { useAsyncStorage } from '../hook/useAsyncStorage';
-import useKeyPadsStore from '../hook/useKeyPadsStore';
+import { useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function RootLayout() {
     const [storedKeyPadData, loading] = useAsyncStorage<KeyPad_Type[]>('@last_Calculator_KeyPads', [stdNum, stdNum2]);

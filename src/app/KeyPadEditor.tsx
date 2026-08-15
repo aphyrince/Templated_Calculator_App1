@@ -6,7 +6,7 @@ import KeyAddModal from '../component/keyPadEditor/KeyAddModal';
 import KeyPadEditorGrid from '../component/keyPadEditor/KeyPadEditorGrid';
 import KeyPadTitle from '../component/keyPadEditor/KeyPadTitle';
 import useEditorStore from '../hook/useEditorStore';
-import useKeyPadsStore from '../hook/useKeyPadsStore';
+import { useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
     const padId = useEditorStore((s) => s.editorPadId);

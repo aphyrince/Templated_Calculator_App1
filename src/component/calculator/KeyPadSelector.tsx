@@ -1,4 +1,4 @@
-import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
+import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
 import React from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 

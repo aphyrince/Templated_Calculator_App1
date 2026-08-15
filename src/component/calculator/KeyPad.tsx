@@ -1,5 +1,6 @@
 import { insertToken } from '@/src/hook/useDisplayStore';
-import useKeyPadsStore from '@/src/hook/useKeyPadsStore';
+import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
+
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 

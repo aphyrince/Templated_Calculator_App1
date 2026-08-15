@@ -6,7 +6,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import KeyPadAddModal from '../component/keyPadList/KeyPadAddModal';
 import KeyPadListItem from '../component/keyPadList/KeyPadListItem';
-import useKeyPadsStore from '../hook/useKeyPadsStore';
+import { useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadList() {
     const navigation = useNavigation();
