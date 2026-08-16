@@ -6,7 +6,7 @@ import { Pressable, View } from 'react-native';
 import KeyAddModal from '../component/keyPadEditor/KeyAddModal';
 import KeyPadEditorGrid from '../component/keyPadEditor/KeyPadEditorGrid';
 import KeyPadTitle from '../component/keyPadEditor/KeyPadTitle';
-import { addKeyItem, updateKeyPad, useKeyPadsStore } from '../hook/useKeyPadsStore';
+import { addKeyItem, setEditorKeyPad, updateKeyPad, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyPadEditor() {
     const editorKeyPad = useKeyPadsStore((s) => s.editorKeyPad);
@@ -28,6 +28,10 @@ export default function KeyPadEditor() {
                 type: 'Constant',
             };
             addKeyItem(newItem);
+            setEditorKeyPad(
+                useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === editorKeyPad.id) as KeyPad,
+            );
+            setShowAddModal(false);
         },
         [editorKeyPad],
     );

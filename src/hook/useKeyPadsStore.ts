@@ -59,27 +59,27 @@ export const moveKeyPad = (id: string, to: number) => {
 
 export const addKeyItem = (keyItem: KeyItem) => {
     const prevKeyPads = store.getState().keyPads;
-    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
     const nextItems: KeyItem[] = [...targetKeyPad.items, keyItem];
     updateKeyPad(keyItem.padId, { items: nextItems });
 };
 
 export const deleteKey = (keyItem: KeyItem) => {
     const prevKeyPads = store.getState().keyPads;
-    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
     const nextItems: KeyItem[] = targetKeyPad.items.filter((item) => item.id !== keyItem.id);
     updateKeyPad(keyItem.padId, { items: nextItems });
 };
 
 export const updateKey = (keyItem: KeyItem, data: Partial<KeyItem>) => {
     const prevKeyPads = store.getState().keyPads;
-    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.id) as KeyPad;
+    const targetKeyPad = prevKeyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
     const nextItems = targetKeyPad.items.map((item) => (item.id === keyItem.id ? { ...item, ...data } : item));
     updateKeyPad(keyItem.padId, { items: nextItems });
 };
 
 export const moveKey = (keyItem: KeyItem, to: number) => {
-    const prevItems = store.getState().keyPads.find((keyPad) => keyPad.id === keyItem.id)?.items as KeyItem[];
+    const prevItems = store.getState().keyPads.find((keyPad) => keyPad.id === keyItem.padId)?.items as KeyItem[];
     const targetDeletedItems = prevItems.filter((item) => item.id !== keyItem.id);
     const nextItems = [...targetDeletedItems.slice(0, to), keyItem, ...targetDeletedItems.slice(to)];
     updateKeyPad(keyItem.padId, { items: nextItems });

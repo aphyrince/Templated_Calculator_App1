@@ -12,7 +12,7 @@ interface Props {
 
 export default function KeyAddModal({ show, onSubmit }: Props) {
     const [name, setName] = useState<string>('');
-    const [value, setValue] = useState<number | null>(null);
+    const [value, setValue] = useState<string>('');
 
     const modalTranslate = useSharedValue(MODAL_HEIGHT);
 
@@ -20,19 +20,20 @@ export default function KeyAddModal({ show, onSubmit }: Props) {
         transform: [{ translateY: modalTranslate.value }],
     }));
 
-    const handleChange = useCallback((data: string | number) => {
-        if (typeof data === 'string') {
-            setName(data);
-        } else {
-            setValue(data);
+    const handleNameChange = useCallback((txt: string) => {
+        setName(txt);
+    }, []);
+    const handleValueChange = useCallback((txt: string) => {
+        if (Number.isInteger(Number(txt))) {
+            setValue(txt);
         }
     }, []);
 
     const handleSubmit = useCallback(() => {
-        if (name === '' || value === null) return;
-        onSubmit(name, value);
+        if (!name || !value) return;
+        onSubmit(name, Number(value));
         setName('');
-        setValue(null);
+        setValue('');
     }, [name, value, onSubmit]);
 
     useEffect(() => {
@@ -46,18 +47,19 @@ export default function KeyAddModal({ show, onSubmit }: Props) {
     return (
         <Animated.View style={[modalAnimeStyle, styles.modal]}>
             <Text style={styles.title}>Add new Key</Text>
-            <TextInput style={styles.input} value={name} placeholder='key' onChangeText={(txt) => handleChange(txt)} />
             <TextInput
                 style={styles.input}
-                value={value?.toString()}
+                value={name}
+                placeholder='key'
+                onChangeText={(txt) => handleNameChange(txt)}
+            />
+            <TextInput
+                style={styles.input}
+                value={value}
                 placeholder='value'
 
                 keyboardType='number-pad'
-                onChangeText={(num) => {
-                    if (Number.isInteger(Number(num))) {
-                        setValue(Number(num));
-                    }
-                }}
+                onChangeText={handleValueChange}
             />
             <Pressable onPress={handleSubmit} style={styles.submitBtn}>
                 <Ionicons name={'add'} size={40} />
