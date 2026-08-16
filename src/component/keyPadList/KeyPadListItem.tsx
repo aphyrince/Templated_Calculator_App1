@@ -1,5 +1,4 @@
 import { deleteKeyPad, setEditorKeyPad } from '@/src/hook/useKeyPadsStore';
-
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';

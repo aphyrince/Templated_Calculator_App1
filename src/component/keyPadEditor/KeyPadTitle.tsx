@@ -10,9 +10,9 @@ interface Props {
 }
 
 export default function KeyPadTitle({ onEditKeyPadName }: Props) {
-    const selectedKeyPad = useKeyPadsStore((s) => s.selectedKeyPad);
+    const editorKeyPad = useKeyPadsStore((s) => s.editorKeyPad);
     const [isEditMode, setIsEditMode] = useState(false);
-    const [name, setName] = useState(selectedKeyPad ? selectedKeyPad.name : '');
+    const [name, setName] = useState(editorKeyPad ? editorKeyPad.name : '');
 
     const longPress = Gesture.Pan()
         .activateAfterLongPress(300)
@@ -25,14 +25,14 @@ export default function KeyPadTitle({ onEditKeyPadName }: Props) {
     }, []);
 
     const handdleSubmit = useCallback(() => {
-        if (selectedKeyPad === null) return;
+        if (editorKeyPad === null) return;
         setIsEditMode(false);
-        if (name !== '' && selectedKeyPad.name !== name) {
+        if (name !== '' && editorKeyPad.name !== name) {
             onEditKeyPadName(name);
         } else {
-            setName(selectedKeyPad.name);
+            setName(editorKeyPad.name);
         }
-    }, [name, onEditKeyPadName, selectedKeyPad]);
+    }, [name, onEditKeyPadName, editorKeyPad]);
 
     return (
         <GestureHandlerRootView
