@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, TextInputProps, View } from 'react-native';
 
 interface Props {
     name: string;
     initialValue: string;
     onChange: (change: Partial<KeyItem>) => void;
+    keyboardType?: TextInputProps['keyboardType'];
 }
 
-export default function KeyItemInput({ name, initialValue, onChange }: Props) {
+export default function KeyItemInput({ name, initialValue, onChange, keyboardType }: Props) {
     const [value, setValue] = useState(initialValue);
 
     return (
@@ -16,6 +17,7 @@ export default function KeyItemInput({ name, initialValue, onChange }: Props) {
             <TextInput
                 className='flex-1 px-4 py-2 rounded-md bg-white'
                 value={value}
+                keyboardType={keyboardType}
                 onChangeText={(txt) => {
                     setValue(txt);
                     onChange({ [name]: txt });
