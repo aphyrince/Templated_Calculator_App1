@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
 import KeyItemInput from '../component/keyEditor/KeyItemInput';
 import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
@@ -12,7 +12,6 @@ export default function KeyEditor() {
     const handleChange = useCallback(
         (changed: Partial<KeyItem>) => {
             if (keyItem === null) return;
-            console.log('keyItem Changed! : ', changed);
             updateKey(keyItem, changed);
             setEditorKeyItem(keyItem);
         },
@@ -28,7 +27,7 @@ export default function KeyEditor() {
     }
 
     return (
-        <View style={styles.container}>
+        <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
             <KeyItemInput name='name' initialValue={keyItem.name} onChange={handleChange} />
             {keyItem.type === 'Constant' && typeof keyItem.value === 'number' && (
                 <KeyItemNumericValueInput initialValue={keyItem.value} onChange={(value) => handleChange({ value })} />
@@ -39,14 +38,3 @@ export default function KeyEditor() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        paddingVertical: 16,
-        gap: 16,
-        backgroundColor: 'black',
-    },
-});
