@@ -47,26 +47,7 @@ export default function KeyEditor() {
                 }}
             />
 
-            <KeyItemTypeSelector name='type' initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
-            {/* <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>type</Text>
-                <View className='flex-1 flex-row gap-2'>
-                    {typeOptions.map((option) => {
-                        const selected = keyItem.type === option.value;
-                        return (
-                            <Pressable
-                                key={option.value}
-                                className={`flex-1 py-2 rounded-md ${selected ? 'bg-btn' : 'bg-white'}`}
-                                onPress={() => handleChange({ type: option.value })}
-                            >
-                                <Text className={`text-center ${selected ? 'text-white' : 'text-black'}`}>
-                                    {option.label}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
-                </View>
-            </View> */}
+            <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
 
             <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
                 <Text className='text-white text-2xl w-24'>color</Text>

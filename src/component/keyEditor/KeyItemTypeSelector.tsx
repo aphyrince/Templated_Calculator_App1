@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 interface Props {
-    name: string;
     initialType: KeyItem['type'];
     onChange: (type: KeyItem['type']) => void;
 }
@@ -15,7 +14,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const DURATION = 200;
 
-export default function KeyItemTypeSelector({ name, initialType, onChange }: Props) {
+export default function KeyItemTypeSelector({ initialType, onChange }: Props) {
     const [type, setType] = useState(initialType);
 
     const constBtnColor = useSharedValue(initialType === 'Constant' ? activeColor : inactiveColor);
@@ -54,7 +53,7 @@ export default function KeyItemTypeSelector({ name, initialType, onChange }: Pro
 
     return (
         <View className='flex-row justify-start items-center gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
-            <Text className='text-white text-2xl w-24 text-center'>{name}</Text>
+            <Text className='text-white text-2xl w-24 text-center'>type</Text>
             <View className='flex-1 flex-row justify-between gap-4'>
                 <AnimatedPressable onPress={() => handlePress('Constant')} style={[styles.btn, constBtnAnimatedStyle]}>
                     <Animated.Text style={[styles.text, constBtnAnimatedStyle]}>Constant</Animated.Text>
