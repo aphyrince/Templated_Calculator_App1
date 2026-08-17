@@ -1,6 +1,8 @@
-import React from 'react';
-import { Pressable, Text, TextInput, View } from 'react-native';
-import { updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
+import React, { useCallback } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import KeyItemInput from '../component/keyEditor/KeyItemInput';
+import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
+import { setEditorKeyItem, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 const typeOptions: { label: string; value: KeyItem['type'] }[] = [
     { label: 'Constant', value: 'Constant' },
@@ -13,10 +15,15 @@ const defaultColor = '#000000';
 export default function KeyEditor() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
 
-    const handleChange = (changed: Partial<KeyItem>) => {
-        if (keyItem === null) return;
-        updateKey(keyItem, changed);
-    };
+    const handleChange = useCallback(
+        (changed: Partial<KeyItem>) => {
+            if (keyItem === null) return;
+            console.log('keyItem Changed! : ', changed);
+            updateKey(keyItem, changed);
+            setEditorKeyItem(keyItem);
+        },
+        [keyItem],
+    );
 
     if (!keyItem) {
         return (
@@ -26,36 +33,22 @@ export default function KeyEditor() {
         );
     }
 
-    const showArgs = keyItem.type === 'Function';
-
     return (
-        <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
-            <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>name</Text>
-                <View className='flex-1'>
-                    <TextInput
-                        className='px-4 py-2 rounded-md bg-white'
-                        value={keyItem.name}
-                        onChangeText={(name) => {
-                            handleChange({ name });
-                        }}
-                    />
-                </View>
-            </View>
-
-            <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>value</Text>
-                <TextInput
-                    className='flex-1 px-4 py-2 rounded-md bg-white'
-                    keyboardType='numeric'
-                    value={String(keyItem.value)}
-                    onChangeText={(value) => {
+        <View style={styles.container}>
+            <KeyItemInput name='name' initialValue={keyItem.name} onChange={handleChange} />
+            <KeyItemInput
+                name='value'
+                initialValue={keyItem.value.toString()}
+                keyboardType='numeric'
+                onChange={({ value }) => {
+                    if (typeof value === 'string') {
                         handleChange({ value: parseInt(value) });
-                    }}
-                />
-            </View>
+                    }
+                }}
+            />
 
-            <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
+            <KeyItemTypeSelector name='type' initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
+            {/* <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
                 <Text className='text-white text-2xl w-24'>type</Text>
                 <View className='flex-1 flex-row gap-2'>
                     {typeOptions.map((option) => {
@@ -73,19 +66,7 @@ export default function KeyEditor() {
                         );
                     })}
                 </View>
-            </View>
-
-            {showArgs && (
-                <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                    <Text className='text-white text-2xl w-24'>args</Text>
-                    <TextInput
-                        className='flex-1 px-4 py-2 rounded-md bg-white'
-                        // placeholder='1,2,3'
-                        // value={keyData.args || ''}
-                        // onChangeText={handleArgsChange}
-                    />
-                </View>
-            )}
+            </View> */}
 
             <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
                 <Text className='text-white text-2xl w-24'>color</Text>
@@ -112,14 +93,47 @@ export default function KeyEditor() {
                 </View>
             </View>
 
-            <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>memo</Text>
-                <TextInput
-                    className='flex-1 px-4 py-2 rounded-md bg-white'
-                    value={keyItem.memo}
-                    onChangeText={(memo) => handleChange({ memo })}
-                />
-            </View>
+            <KeyItemInput name='memo' initialValue={keyItem.memo || ''} onChange={handleChange} />
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        paddingVertical: 16,
+        gap: 16,
+        backgroundColor: 'black',
+    },
+    inputContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: 16,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: '0.375rem',
+        width: '92%',
+        backgroundColor: '#1e1e1e',
+    },
+    inputLabel: {
+        color: 'white',
+        fontSize: 24,
+        textAlign: 'center',
+        width: 100,
+    },
+    inputArea: {
+        flex: 1,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: '0.375rem',
+        backgroundColor: 'white',
+    },
+    type: {},
+    typeBtn: {},
+    color: {},
+    colorBtn: {},
+    memo: {},
+});
