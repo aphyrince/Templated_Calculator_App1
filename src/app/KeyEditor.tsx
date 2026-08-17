@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
 import KeyItemInput from '../component/keyEditor/KeyItemInput';
 import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
 import { setEditorKeyItem, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
@@ -46,34 +47,8 @@ export default function KeyEditor() {
                     }
                 }}
             />
-
             <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
-
-            <View className='flex-row justify-start items-center gap-4 bg-third w-[92%] py-2 px-4 rounded-md'>
-                <Text className='text-white text-2xl w-24'>color</Text>
-                <View className='flex-1 flex-row flex-wrap gap-2'>
-                    {colorOptions.map((option) => {
-                        const selected = keyItem.color === option;
-                        return (
-                            <Pressable
-                                key={option}
-                                className={`size-8 rounded-full border-2 ${selected ? 'border-white' : 'border-transparent'}`}
-                                style={{ backgroundColor: option }}
-                                onPress={() => handleChange({ color: option })}
-                            />
-                        );
-                    })}
-                    <Pressable
-                        className={`px-3 py-2 rounded-md ${keyItem.color === defaultColor ? 'bg-btn' : 'bg-white'}`}
-                        onPress={() => handleChange({ color: defaultColor })}
-                    >
-                        <Text className={`${keyItem.color === defaultColor ? 'text-white' : 'text-black'}`}>
-                            default
-                        </Text>
-                    </Pressable>
-                </View>
-            </View>
-
+            <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
             <KeyItemInput name='memo' initialValue={keyItem.memo || ''} onChange={handleChange} />
         </View>
     );
