@@ -5,7 +5,7 @@ import KeyItemInput from '../component/keyEditor/KeyItemInput';
 import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
 import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
 import KeyItemNumericValueInput from '../component/keyEditor/KeyItemValueInput';
-import { setEditorKeyItem, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
+import { setEditorKeyItem, setEditorKeyPad, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyEditor() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
@@ -13,8 +13,14 @@ export default function KeyEditor() {
     const handleChange = useCallback(
         (changed: Partial<KeyItem>) => {
             if (keyItem === null) return;
+
             updateKey(keyItem, changed);
-            setEditorKeyItem(keyItem);
+            const editorKeyPad = useKeyPadsStore
+                .getState()
+                .keyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
+            setEditorKeyPad(editorKeyPad);
+            const editorKeyItem = editorKeyPad.items.find((item) => item.id === keyItem.id) as KeyItem;
+            setEditorKeyItem(editorKeyItem);
         },
         [keyItem],
     );
@@ -30,10 +36,10 @@ export default function KeyEditor() {
     return (
         <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
             <KeyItemInput name='name' initialValue={keyItem.name} onChange={handleChange} />
+            <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
             {keyItem.type === 'Constant' && typeof keyItem.value === 'number' && (
                 <KeyItemNumericValueInput initialValue={keyItem.value} onChange={(value) => handleChange({ value })} />
             )}
-            <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
             <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
             <KeyItemMemoInput initialValue={keyItem.memo || ''} onChange={handleChange} />
         </View>
