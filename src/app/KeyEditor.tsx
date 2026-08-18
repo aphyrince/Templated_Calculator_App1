@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Text, View } from 'react-native';
 import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
 import KeyItemInput from '../component/keyEditor/KeyItemInput';
+import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
 import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
 import KeyItemNumericValueInput from '../component/keyEditor/KeyItemValueInput';
 import { setEditorKeyItem, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
@@ -34,7 +35,7 @@ export default function KeyEditor() {
             )}
             <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
             <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
-            <KeyItemInput name='memo' initialValue={keyItem.memo || ''} onChange={handleChange} />
+            <KeyItemMemoInput initialValue={keyItem.memo || ''} onChange={handleChange} />
         </View>
     );
 }
