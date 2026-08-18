@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { Text, View } from 'react-native';
+import FunctionEditor from '../component/keyEditor/FunctionEditor';
 import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
 import KeyItemInput from '../component/keyEditor/KeyItemInput';
 import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
@@ -40,6 +41,7 @@ export default function KeyEditor() {
             {keyItem.type === 'Constant' && typeof keyItem.value === 'number' && (
                 <KeyItemNumericValueInput initialValue={keyItem.value} onChange={(value) => handleChange({ value })} />
             )}
+            {keyItem.type === 'Function' && <FunctionEditor />}
             <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
             <KeyItemMemoInput initialValue={keyItem.memo || ''} onChange={handleChange} />
         </View>
