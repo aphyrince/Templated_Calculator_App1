@@ -12,6 +12,8 @@ interface KeyItem {
     name: string;
     value: number | string;
     type: 'Constant' | 'Function';
+    parameters?: string[];
+    expression?: Token[];
     color?: string;
     memo?: string;
 }

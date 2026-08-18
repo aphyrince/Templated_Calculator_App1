@@ -8,7 +8,18 @@ export default function KeyPad() {
     const selectedKeyPad = useKeyPadsStore((s) => s.selectedKeyPad);
 
     const handleKeyPress = (key: KeyItem) => {
-        insertToken(key.value);
+        if (key.type === 'Function') {
+            // Display f(param1, param2, ...) format
+            insertToken('f');
+            insertToken('(');
+            key.parameters?.forEach((param, idx) => {
+                if (idx > 0) insertToken(',');
+                insertToken(param);
+            });
+            insertToken(')');
+        } else {
+            insertToken(key.value);
+        }
     };
 
     return (
