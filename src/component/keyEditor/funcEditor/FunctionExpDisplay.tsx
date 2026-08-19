@@ -14,16 +14,19 @@ export default function FunctionExpDisplay({ tokens }: Props) {
     }, [tokens]);
 
     return (
-        <ScrollView
-            ref={(node) => {
-                if (node) scrollViewRef.current = node;
-            }}
-        >
-            <View>
-                {tokens.map((token) => (
-                    <Text key={token.id}>{token.value}</Text>
-                ))}
-            </View>
-        </ScrollView>
+        <View className='w-full gap-2'>
+            <Text className='text-white text-lg font-semibold'>Expression</Text>
+            <ScrollView
+                ref={(node) => {
+                    if (node) scrollViewRef.current = node;
+                }}
+            >
+                <View className='h-10 bg-black p-2 rounded-md'>
+                    {tokens.map((token) => (
+                        <Text key={token.id}>{token.value}</Text>
+                    ))}
+                </View>
+            </ScrollView>
+        </View>
     );
 }
