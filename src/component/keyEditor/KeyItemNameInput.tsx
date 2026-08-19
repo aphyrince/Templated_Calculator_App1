@@ -8,12 +8,12 @@ interface Props {
     keyboardType?: TextInputProps['keyboardType'];
 }
 
-export default function KeyItemInput({ name, initialValue, onChange, keyboardType }: Props) {
+export default function KeyItemNameInput({ name, initialValue, onChange, keyboardType }: Props) {
     const [value, setValue] = useState(initialValue);
 
     return (
         <View className='flex-row justify-start items-center gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
-            <Text className='text-white text-2xl w-24 text-center'>{name}</Text>
+            <Text className='text-white text-2xl w-24 font-semibold'>Name</Text>
             <TextInput
                 className='flex-1 px-4 py-2 rounded-md bg-white'
                 value={value}

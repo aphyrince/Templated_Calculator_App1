@@ -53,7 +53,7 @@ export default function KeyItemTypeSelector({ initialType, onChange }: Props) {
 
     return (
         <View className='flex-row justify-start items-center gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
-            <Text className='text-white text-2xl w-24 text-center'>type</Text>
+            <Text className='text-white text-2xl font-semibold w-24'>Type</Text>
             <View className='flex-1 flex-row justify-between gap-4'>
                 <AnimatedPressable onPress={() => handlePress('Constant')} style={[styles.btn, constBtnAnimatedStyle]}>
                     <Animated.Text style={[styles.text, constBtnAnimatedStyle]}>Constant</Animated.Text>

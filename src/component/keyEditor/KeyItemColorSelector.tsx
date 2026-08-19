@@ -18,7 +18,7 @@ export default function KeyItemColorSelector({ initialColor = '#000000', onChang
 
     return (
         <View className='flex-row justify-start items-center gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
-            <Text className='text-white text-2xl w-24 text-center'>color</Text>
+            <Text className='text-white text-2xl w-24 font-semibold'>Color</Text>
             <View className='flex-1 flex-row flex-wrap gap-2 p-2'>
                 {colorOptions.map((option) => {
                     const selected = color === option;

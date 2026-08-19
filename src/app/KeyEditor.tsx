@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import FunctionEditor2 from '../component/keyEditor/funcEditor/FunctionEditor2';
 import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
-import KeyItemInput from '../component/keyEditor/KeyItemInput';
 import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
+import KeyItemNameInput from '../component/keyEditor/KeyItemNameInput';
 import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
 import KeyItemNumericValueInput from '../component/keyEditor/KeyItemValueInput';
 import { setEditorKeyItem, setEditorKeyPad, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
@@ -37,7 +37,7 @@ export default function KeyEditor() {
     return (
         <ScrollView className='bg-black'>
             <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
-                <KeyItemInput name='name' initialValue={keyItem.name} onChange={handleChange} />
+                <KeyItemNameInput name='name' initialValue={keyItem.name} onChange={handleChange} />
                 <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
                 {keyItem.type === 'Constant' && typeof keyItem.value === 'number' && (
                     <KeyItemNumericValueInput

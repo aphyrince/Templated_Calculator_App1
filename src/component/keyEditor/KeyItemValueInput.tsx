@@ -11,7 +11,7 @@ export default function KeyItemNumericValueInput({ initialValue, onChange }: Pro
 
     return (
         <View className='flex-row justify-start items-center gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
-            <Text className='text-white text-2xl w-24 text-center'>value</Text>
+            <Text className='text-white text-2xl font-semibold w-24'>Value</Text>
             <TextInput
                 className='flex-1 px-4 py-2 rounded-md bg-white'
                 value={value.toString()}
