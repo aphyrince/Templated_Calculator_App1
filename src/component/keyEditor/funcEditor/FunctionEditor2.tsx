@@ -1,6 +1,7 @@
 import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
+import FunctionExpDisplay from './FunctionExpDisplay';
 
 export default function FunctionEditor2() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
@@ -23,6 +24,7 @@ export default function FunctionEditor2() {
                 </Text>
             </View>
             {/* Expression Display*/}
+            <FunctionExpDisplay tokens={funcTokens} />
             {/* Token Input Section*/}
         </View>
     );
