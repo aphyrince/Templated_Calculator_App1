@@ -54,3 +54,5 @@ interface Pos {
     width: number;
     height: number;
 }
+
+type FuncToken = Token;
