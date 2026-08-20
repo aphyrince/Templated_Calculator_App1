@@ -26,7 +26,7 @@ export default function FunctionEditor2() {
             </View>
             <View className='w-full gap-2 bg-black/30 p-3 rounded-md'>
                 <FunctionExpDisplay tokens={funcTokens} />
-                <FunctionEditorKeyPad />
+                <FunctionEditorKeyPad setTokens={setFuncTokens} />
             </View>
         </View>
     );

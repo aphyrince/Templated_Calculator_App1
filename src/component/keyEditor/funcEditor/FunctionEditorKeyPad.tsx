@@ -1,3 +1,4 @@
+import { randomUUID } from 'expo-crypto';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
@@ -6,7 +7,22 @@ const OPERATORS = ['+', '-', '*', '/', '(', ')', '^'];
 const FUNCTIONS = ['sin', 'cos', 'tan', 'sqrt', 'abs', 'log', 'exp', 'pow', 'min', 'max'];
 const CONSTANTS = ['PI', 'E'];
 
-export default function FunctionEditorKeyPad() {
+interface Props {
+    setTokens: React.Dispatch<React.SetStateAction<Token[]>>;
+}
+
+export default function FunctionEditorKeyPad({ setTokens }: Props) {
+    const handlePress = (value: string | number) => {
+        setTokens((prev) => {
+            const newToken: FuncToken = {
+                id: randomUUID(),
+                idx: prev.length,
+                value: value,
+            };
+            return [...prev, newToken];
+        });
+    };
+
     return (
         <View className='w-full flex-row flex-wrap gap-y-4'>
             <View className='w-1/2 gap-1'>
