@@ -1,4 +1,4 @@
-import { insertToken } from '@/src/hook/useDisplayStore';
+import { insertFuncToken, insertToken } from '@/src/hook/useDisplayStore';
 import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
 
 import React from 'react';
@@ -9,14 +9,8 @@ export default function KeyPad() {
 
     const handleKeyPress = (key: KeyItem) => {
         if (key.type === 'Function') {
-            // Display f(param1, param2, ...) format
-            insertToken('f');
-            insertToken('(');
-            key.parameters?.forEach((param, idx) => {
-                if (idx > 0) insertToken(',');
-                insertToken(param);
-            });
-            insertToken(')');
+            if (!key.funcExps) return;
+            insertFuncToken(key.funcExps);
         } else {
             insertToken(key.value);
         }

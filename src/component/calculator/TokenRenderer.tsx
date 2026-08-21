@@ -1,6 +1,7 @@
 import { useDisplayStore } from '@/src/hook/useDisplayStore';
 import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import FuncRenderer from './FuncRenderer';
 
 const TOKEN_WIDTH = 16;
 
@@ -22,12 +23,23 @@ export default function TokenRenderer() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 16 }}
         >
-            <View style={styles.content}>
+            {/* <View style={styles.content}>
                 {tokens.map((token, idx) => (
                     <Text style={styles.token} key={token.id}>
                         {token.value}
                     </Text>
                 ))}
+            </View> */}
+            <View style={styles.content}>
+                {tokens.map((token) =>
+                    token.value === 'Function' ? (
+                        <FuncRenderer key={token.id} token={token} />
+                    ) : (
+                        <Text style={styles.token} key={token.id}>
+                            {token.value}
+                        </Text>
+                    ),
+                )}
             </View>
         </ScrollView>
     );

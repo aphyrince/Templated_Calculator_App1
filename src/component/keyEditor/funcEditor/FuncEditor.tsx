@@ -1,15 +1,30 @@
-import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
-import React, { useState } from 'react';
+import { setEditorKeyItem, setEditorKeyPad, updateKey, useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
+import { isBlankType } from '@/src/utils/isBlankType';
+import React from 'react';
 import { Text, View } from 'react-native';
 import FuncDisplay from './FuncDisplay';
 import FuncKeyPad from './FuncKeyPad';
 
 export default function FuncEditor() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
-    const [funcTokens, setFuncTokens] = useState<FuncToken[]>(keyItem?.expression || []);
 
     const handleDelete = () => {
-        setFuncTokens((prev) => [...prev.slice(0, -1)]);
+        if (!keyItem || !keyItem.funcExps) return;
+        updateKey(keyItem, { funcExps: [...keyItem.funcExps.slice(0, -1)] });
+        const editorKeyPad = useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
+        setEditorKeyPad(editorKeyPad);
+        const editorKeyItem = editorKeyPad.items.find((item) => item.id === keyItem.id) as KeyItem;
+        setEditorKeyItem(editorKeyItem);
+    };
+
+    const handleAddExp = (exp: FuncExp) => {
+        if (!keyItem) return;
+        const prevExps = keyItem.funcExps || [];
+        updateKey(keyItem, { funcExps: [...prevExps, exp] });
+        const editorKeyPad = useKeyPadsStore.getState().keyPads.find((keyPad) => keyPad.id === keyItem.padId) as KeyPad;
+        setEditorKeyPad(editorKeyPad);
+        const editorKeyItem = editorKeyPad.items.find((item) => item.id === keyItem.id) as KeyItem;
+        setEditorKeyItem(editorKeyItem);
     };
 
     return (
@@ -21,22 +36,28 @@ export default function FuncEditor() {
                 <View className='flex-row items-center'>
                     <Text className='text-white text-xl font-bold'>{keyItem?.name}</Text>
                     <Text className='text-white text-xl font-bold'>{'('}</Text>
-                    {funcTokens
-                        .filter((token) => token.value === 'Blank')
-                        .map((token, idx, arr) => {
-                            return (
-                                <View key={token.id} className='flex-row justify-center items-center h-full'>
-                                    <View className='h-[90%] w-5 bg-transparent border-2 border-white rounded-sm mx-1' />
-                                    {idx <= arr.length - 2 && <Text className='text-white text-xl font-bold'>, </Text>}
-                                </View>
-                            );
-                        })}
+                    {keyItem &&
+                        keyItem.funcExps &&
+                        keyItem.funcExps
+                            .filter((exp) => isBlankType(exp))
+                            .map((blank, idx, arr) => {
+                                return (
+                                    <View key={blank.id} className='flex-row justify-center items-center h-full'>
+                                        <View className='h-[90%] w-5 bg-transparent border-2 border-white rounded-sm mx-1'>
+                                            <Text className='text-center text-gray-400'>{blank.name}</Text>
+                                        </View>
+                                        {idx <= arr.length - 2 && (
+                                            <Text className='text-white text-xl font-bold'>, </Text>
+                                        )}
+                                    </View>
+                                );
+                            })}
                     <Text className='text-white text-xl font-bold'>{')'}</Text>
                 </View>
             </View>
             <View className='w-full gap-2 bg-black/30 p-3 rounded-md'>
-                <FuncDisplay tokens={funcTokens} onDelete={handleDelete} />
-                <FuncKeyPad setTokens={setFuncTokens} />
+                <FuncDisplay exps={keyItem?.funcExps || []} onDelete={handleDelete} />
+                <FuncKeyPad onAddExp={handleAddExp} />
             </View>
         </View>
     );

@@ -12,7 +12,6 @@ interface KeyItem {
     name: string;
     value: number | string;
     type: 'Constant' | 'Function';
-    funcBlanks?: Blank[];
     funcExps?: FuncExp[];
     color?: string;
     memo?: string;
@@ -41,6 +40,7 @@ interface Token {
     id: string;
     idx: number;
     value: number | string | 'Function' | null;
+    funcExps?: FuncExp[];
 }
 
 interface Cursor {
@@ -61,5 +61,5 @@ interface Blank {
     id: string;
     idx: number;
     name: string;
-    value: number;
+    value: number | null;
 }

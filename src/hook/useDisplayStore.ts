@@ -52,6 +52,23 @@ export const insertToken = (value: Token['value'], to?: number) => {
     setCursorIdx(nextCursorIdx);
 };
 
+export const insertFuncToken = (funcExps: FuncExp[], to?: number) => {
+    const idx = to === undefined ? store.getState().cursor.currIdx : to;
+    const funcToken: Token = {
+        id: randomUUID(),
+        idx,
+        value: 'Function',
+        funcExps,
+    };
+
+    const prevTokens = store.getState().tokens;
+    const nextTokens = [...prevTokens.slice(0, idx), funcToken, ...prevTokens.slice(idx)];
+    const nextCursorIdx = idx + 1;
+
+    setTokens(nextTokens);
+    setCursorIdx(nextCursorIdx);
+};
+
 // 현재 커서가 위치해 있는 곳의 토큰을 삭제함.
 export const deleteToken = () => {
     const prevTokens = store.getState().tokens;

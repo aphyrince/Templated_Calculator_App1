@@ -8,19 +8,18 @@ const FUNCTIONS = ['sin', 'cos', 'tan', 'sqrt', 'abs', 'log', 'exp', 'pow', 'min
 const CONSTANTS = ['PI', 'E'];
 
 interface Props {
-    setTokens: React.Dispatch<React.SetStateAction<Token[]>>;
+    onAddExp: (exp: FuncExp) => void;
 }
 
-export default function FuncKeyPad({ setTokens }: Props) {
-    const handlePress = (value: string | number) => {
-        setTokens((prev) => {
-            const newToken: FuncToken = {
-                id: randomUUID(),
-                idx: prev.length,
-                value: value,
-            };
-            return [...prev, newToken];
-        });
+export default function FuncKeyPad({ onAddExp }: Props) {
+    const handleAddBlank = () => {
+        const newBlank: Blank = {
+            id: randomUUID(),
+            idx: 0,
+            name: 'a',
+            value: null,
+        };
+        onAddExp(newBlank);
     };
 
     return (
@@ -32,7 +31,7 @@ export default function FuncKeyPad({ setTokens }: Props) {
                         <TouchableOpacity
                             key={num}
                             className='bg-purple-600 rounded-md px-3 py-2 min-w-10'
-                            onPress={() => handlePress(num)}
+                            onPress={() => onAddExp(num)}
                         >
                             <Text className='text-white font-bold text-center'>{num}</Text>
                         </TouchableOpacity>
@@ -46,7 +45,7 @@ export default function FuncKeyPad({ setTokens }: Props) {
                         <TouchableOpacity
                             key={num}
                             className='bg-orange-600 rounded-md px-3 py-2 min-w-10'
-                            onPress={() => handlePress(num)}
+                            onPress={() => onAddExp(num)}
                         >
                             <Text className='text-white font-bold text-center'>{num}</Text>
                         </TouchableOpacity>
@@ -60,7 +59,7 @@ export default function FuncKeyPad({ setTokens }: Props) {
                         <TouchableOpacity
                             key={num}
                             className='bg-indigo-600 rounded-md px-safe-or-3 py-2 min-w-10'
-                            onPress={() => handlePress(num)}
+                            onPress={() => onAddExp(num)}
                         >
                             <Text className='text-white font-bold text-center'>{num}</Text>
                         </TouchableOpacity>
@@ -74,7 +73,7 @@ export default function FuncKeyPad({ setTokens }: Props) {
                         <TouchableOpacity
                             key={num}
                             className='bg-teal-600 rounded-md px-3 py-2 min-w-10'
-                            onPress={() => handlePress(num)}
+                            onPress={() => onAddExp(num)}
                         >
                             <Text className='text-white font-bold text-center'>{num}</Text>
                         </TouchableOpacity>
@@ -82,10 +81,7 @@ export default function FuncKeyPad({ setTokens }: Props) {
                 </View>
             </View>
             <View className='w-full'>
-                <TouchableOpacity
-                    className='flex-1 bg-red-600 rounded-md px-3 py-2'
-                    onPress={() => handlePress('Blank')}
-                >
+                <TouchableOpacity className='flex-1 bg-red-600 rounded-md px-3 py-2' onPress={handleAddBlank}>
                     <Text className='text-white font-semibold text-center'>Add Blank (□)</Text>
                 </TouchableOpacity>
             </View>
