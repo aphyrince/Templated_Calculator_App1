@@ -8,7 +8,7 @@ interface Props {
     keyboardType?: TextInputProps['keyboardType'];
 }
 
-export default function KeyItemNameInput({ name, initialValue, onChange, keyboardType }: Props) {
+export default function Name({ name, initialValue, onChange, keyboardType }: Props) {
     const [value, setValue] = useState(initialValue);
 
     return (

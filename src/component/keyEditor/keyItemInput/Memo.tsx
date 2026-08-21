@@ -6,7 +6,7 @@ interface Props {
     onChange: (change: Partial<KeyItem>) => void;
 }
 
-export default function KeyItemMemoInput({ initialValue, onChange }: Props) {
+export default function Memo({ initialValue, onChange }: Props) {
     const [memo, setMemo] = useState(initialValue);
 
     return (

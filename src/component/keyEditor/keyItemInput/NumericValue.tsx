@@ -6,7 +6,7 @@ interface Props {
     onChange: (value: number) => void;
 }
 
-export default function KeyItemNumericValueInput({ initialValue, onChange }: Props) {
+export default function NumericValue({ initialValue, onChange }: Props) {
     const [value, setValue] = useState(initialValue);
 
     return (

@@ -14,7 +14,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const DURATION = 200;
 
-export default function KeyItemTypeSelector({ initialType, onChange }: Props) {
+export default function TypeSelector({ initialType, onChange }: Props) {
     const [type, setType] = useState(initialType);
 
     const constBtnColor = useSharedValue(initialType === 'Constant' ? activeColor : inactiveColor);

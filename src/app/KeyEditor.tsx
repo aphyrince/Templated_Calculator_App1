@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import FuncEditor from '../component/keyEditor/funcEditor/FuncEditor';
-import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
-import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
-import KeyItemNameInput from '../component/keyEditor/KeyItemNameInput';
-import KeyItemTypeSelector from '../component/keyEditor/KeyItemTypeSelector';
-import KeyItemNumericValueInput from '../component/keyEditor/KeyItemValueInput';
+import ColorSelector from '../component/keyEditor/keyItemInput/ColorSelector';
+import Memo from '../component/keyEditor/keyItemInput/Memo';
+import Name from '../component/keyEditor/keyItemInput/Name';
+import NumericValue from '../component/keyEditor/keyItemInput/NumericValue';
+import TypeSelector from '../component/keyEditor/keyItemInput/TypeSelector';
 import { setEditorKeyItem, setEditorKeyPad, updateKey, useKeyPadsStore } from '../hook/useKeyPadsStore';
 
 export default function KeyEditor() {
@@ -37,18 +37,15 @@ export default function KeyEditor() {
     return (
         <ScrollView className='bg-black'>
             <View className='flex-1 justify-start items-center py-4 gap-4 bg-primary'>
-                <KeyItemNameInput name='name' initialValue={keyItem.name} onChange={handleChange} />
-                <KeyItemTypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
+                <Name name='name' initialValue={keyItem.name} onChange={handleChange} />
+                <TypeSelector initialType={keyItem.type} onChange={(type) => handleChange({ type })} />
                 {keyItem.type === 'Constant' && typeof keyItem.value === 'number' && (
-                    <KeyItemNumericValueInput
-                        initialValue={keyItem.value}
-                        onChange={(value) => handleChange({ value })}
-                    />
+                    <NumericValue initialValue={keyItem.value} onChange={(value) => handleChange({ value })} />
                 )}
                 {/* {keyItem.type === 'Function' && <FunctionEditor />} */}
                 {keyItem.type === 'Function' && <FuncEditor />}
-                <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
-                <KeyItemMemoInput initialValue={keyItem.memo || ''} onChange={handleChange} />
+                <ColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
+                <Memo initialValue={keyItem.memo || ''} onChange={handleChange} />
             </View>
         </ScrollView>
     );

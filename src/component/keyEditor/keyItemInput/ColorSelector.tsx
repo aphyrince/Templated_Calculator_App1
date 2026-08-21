@@ -8,7 +8,7 @@ interface Props {
 
 const colorOptions = ['#000000', '#f59e0b', '#3b82f6', '#ef4444', '#10b981', '#8b5cf6', '#facc15'];
 
-export default function KeyItemColorSelector({ initialColor = '#000000', onChange }: Props) {
+export default function ColorSelector({ initialColor = '#000000', onChange }: Props) {
     const [color, setColor] = useState(initialColor);
 
     const handleChange = useCallback((color: KeyItem['color']) => {
