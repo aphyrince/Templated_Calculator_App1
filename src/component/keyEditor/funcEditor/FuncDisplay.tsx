@@ -1,11 +1,13 @@
+import { FontAwesome6 } from '@expo/vector-icons';
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 interface Props {
     tokens: FuncToken[];
+    onDelete: () => void;
 }
 
-export default function FuncDisplay({ tokens }: Props) {
+export default function FuncDisplay({ tokens, onDelete }: Props) {
     const scrollViewRef = useRef<ScrollView | null>(null);
 
     useEffect(() => {
@@ -14,7 +16,7 @@ export default function FuncDisplay({ tokens }: Props) {
     }, [tokens]);
 
     return (
-        <View className='w-full gap-2'>
+        <View className='w-full gap-2 relative'>
             <Text className='text-white text-lg font-semibold'>Expression</Text>
             {/* Expression */}
             <ScrollView
@@ -22,7 +24,7 @@ export default function FuncDisplay({ tokens }: Props) {
                     if (node) scrollViewRef.current = node;
                 }}
                 horizontal={true}
-                className='w-full bg-black px-3 py-2 h-12 rounded-md items-center'
+                className=' bg-black px-3 py-2 pr-14 h-12 rounded-md items-center'
             >
                 {tokens.map((token) =>
                     token.value === 'Blank' ? (
@@ -37,6 +39,9 @@ export default function FuncDisplay({ tokens }: Props) {
                     ),
                 )}
             </ScrollView>
+            <TouchableOpacity className='absolute bottom-3 right-3' onPress={onDelete}>
+                <FontAwesome6 name='delete-left' size={24} color='orange' />
+            </TouchableOpacity>
         </View>
     );
 }

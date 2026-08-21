@@ -8,6 +8,10 @@ export default function FuncEditor() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
     const [funcTokens, setFuncTokens] = useState<FuncToken[]>(keyItem?.expression || []);
 
+    const handleDelete = () => {
+        setFuncTokens((prev) => [...prev.slice(0, -1)]);
+    };
+
     return (
         <View className='justify-start items-start gap-4 px-4 py-2 rounded-md w-[92%] bg-third'>
             <Text className='text-white text-2xl font-bold'>Function Editor</Text>
@@ -31,7 +35,7 @@ export default function FuncEditor() {
                 </View>
             </View>
             <View className='w-full gap-2 bg-black/30 p-3 rounded-md'>
-                <FuncDisplay tokens={funcTokens} />
+                <FuncDisplay tokens={funcTokens} onDelete={handleDelete} />
                 <FuncKeyPad setTokens={setFuncTokens} />
             </View>
         </View>
