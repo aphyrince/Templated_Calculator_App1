@@ -12,8 +12,8 @@ interface KeyItem {
     name: string;
     value: number | string;
     type: 'Constant' | 'Function';
-    parameters?: string[];
-    expression?: Token[];
+    funcBlanks?: Blank[];
+    funcExps?: FuncExp[];
     color?: string;
     memo?: string;
 }
@@ -55,11 +55,7 @@ interface Pos {
     height: number;
 }
 
-// type FuncToken = Token;
-
-interface FuncToken extends Token {
-    funcExps: (number | string | Blank)[];
-}
+type FuncExp = number | string | Blank;
 
 interface Blank {
     id: string;
