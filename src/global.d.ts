@@ -40,7 +40,7 @@ interface GridMeta {
 interface Token {
     id: string;
     idx: number;
-    value: number | string | 'Blank' | null;
+    value: number | string | 'Function' | null;
 }
 
 interface Cursor {
@@ -55,4 +55,15 @@ interface Pos {
     height: number;
 }
 
-type FuncToken = Token;
+// type FuncToken = Token;
+
+interface FuncToken extends Token {
+    funcExps: (number | string | Blank)[];
+}
+
+interface Blank {
+    id: string;
+    idx: number;
+    name: string;
+    value: number;
+}
