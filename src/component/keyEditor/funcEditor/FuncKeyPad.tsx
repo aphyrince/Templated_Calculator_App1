@@ -11,7 +11,7 @@ interface Props {
     setTokens: React.Dispatch<React.SetStateAction<Token[]>>;
 }
 
-export default function FunctionEditorKeyPad({ setTokens }: Props) {
+export default function FuncKeyPad({ setTokens }: Props) {
     const handlePress = (value: string | number) => {
         setTokens((prev) => {
             const newToken: FuncToken = {

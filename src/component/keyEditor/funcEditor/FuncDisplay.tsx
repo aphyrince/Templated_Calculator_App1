@@ -5,7 +5,7 @@ interface Props {
     tokens: FuncToken[];
 }
 
-export default function FunctionExpDisplay({ tokens }: Props) {
+export default function FuncDisplay({ tokens }: Props) {
     const scrollViewRef = useRef<ScrollView | null>(null);
 
     useEffect(() => {

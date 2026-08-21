@@ -1,10 +1,10 @@
 import { useKeyPadsStore } from '@/src/hook/useKeyPadsStore';
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
-import FunctionEditorKeyPad from './FunctionEditorKeyPad';
-import FunctionExpDisplay from './FunctionExpDisplay';
+import FuncDisplay from './FuncDisplay';
+import FuncKeyPad from './FuncKeyPad';
 
-export default function FunctionEditor2() {
+export default function FuncEditor() {
     const keyItem = useKeyPadsStore((s) => s.editorKeyItem);
     const [funcTokens, setFuncTokens] = useState<FuncToken[]>(keyItem?.expression || []);
 
@@ -25,8 +25,8 @@ export default function FunctionEditor2() {
                 </Text>
             </View>
             <View className='w-full gap-2 bg-black/30 p-3 rounded-md'>
-                <FunctionExpDisplay tokens={funcTokens} />
-                <FunctionEditorKeyPad setTokens={setFuncTokens} />
+                <FuncDisplay tokens={funcTokens} />
+                <FuncKeyPad setTokens={setFuncTokens} />
             </View>
         </View>
     );

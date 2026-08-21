@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import FunctionEditor2 from '../component/keyEditor/funcEditor/FunctionEditor2';
+import FuncEditor from '../component/keyEditor/funcEditor/FuncEditor';
 import KeyItemColorSelector from '../component/keyEditor/KeyItemColorSelector';
 import KeyItemMemoInput from '../component/keyEditor/KeyItemMemoInput';
 import KeyItemNameInput from '../component/keyEditor/KeyItemNameInput';
@@ -46,7 +46,7 @@ export default function KeyEditor() {
                     />
                 )}
                 {/* {keyItem.type === 'Function' && <FunctionEditor />} */}
-                {keyItem.type === 'Function' && <FunctionEditor2 />}
+                {keyItem.type === 'Function' && <FuncEditor />}
                 <KeyItemColorSelector initialColor={keyItem.color} onChange={(color) => handleChange({ color })} />
                 <KeyItemMemoInput initialValue={keyItem.memo || ''} onChange={handleChange} />
             </View>
