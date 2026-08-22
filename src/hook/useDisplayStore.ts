@@ -52,12 +52,13 @@ export const insertToken = (value: Token['value'], to?: number) => {
     setCursorIdx(nextCursorIdx);
 };
 
-export const insertFuncToken = (funcExps: FuncExp[], to?: number) => {
+export const insertFuncToken = (funcExps: FuncExp[], name: string, to?: number) => {
     const idx = to === undefined ? store.getState().cursor.currIdx : to;
     const funcToken: Token = {
         id: randomUUID(),
         idx,
         value: 'Function',
+        name,
         funcExps,
     };
 

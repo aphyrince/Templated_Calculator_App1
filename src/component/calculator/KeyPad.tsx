@@ -10,7 +10,7 @@ export default function KeyPad() {
     const handleKeyPress = (key: KeyItem) => {
         if (key.type === 'Function') {
             if (!key.funcExps) return;
-            insertFuncToken(key.funcExps);
+            insertFuncToken(key.funcExps, key.name);
         } else {
             insertToken(key.value);
         }

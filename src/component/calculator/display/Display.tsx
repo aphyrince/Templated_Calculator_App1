@@ -1,7 +1,7 @@
 import { setResultNull, useDisplayStore } from '@/src/hook/useDisplayStore';
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import TokenRenderer from './TokenRenderer';
+import TokenRenderer from '../display/TokenRenderer';
 
 export default function Display() {
     const tokens = useDisplayStore((s) => s.tokens);
