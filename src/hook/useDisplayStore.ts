@@ -1,6 +1,9 @@
 import { randomUUID } from 'expo-crypto';
 import { create } from 'zustand';
 import calculate from '../utils/calculate';
+import { isBlankType } from '../utils/isBlankType';
+import { isFullFuncBlank } from '../utils/isFullFuncBlank';
+import { isFuncToken } from '../utils/isFuncToken';
 
 export interface DisplayState {
     tokens: Token[];
@@ -37,6 +40,17 @@ export const setCursorIdx = (idx: number) => {
 };
 
 export const insertToken = (value: Token['value'], to?: number) => {
+    const prevTokens = store.getState().tokens;
+
+    if (
+        prevTokens.length > 0 &&
+        isFuncToken(prevTokens[prevTokens.length - 1]) &&
+        !isFullFuncBlank(prevTokens[prevTokens.length - 1])
+    ) {
+        insertToFuncBlank(value);
+        return;
+    }
+
     const idx = to === undefined ? store.getState().cursor.currIdx : to;
     const id = randomUUID();
     const token: Token = {
@@ -44,7 +58,6 @@ export const insertToken = (value: Token['value'], to?: number) => {
         idx,
         value,
     };
-    const prevTokens = store.getState().tokens;
     const nextTokens = [...prevTokens.slice(0, idx), token, ...prevTokens.slice(idx)];
     const nextCursorIdx = idx + 1;
 
@@ -52,22 +65,55 @@ export const insertToken = (value: Token['value'], to?: number) => {
     setCursorIdx(nextCursorIdx);
 };
 
+export const insertToFuncBlank = (value: Token['value']) => {
+    if (typeof value !== 'number') return;
+
+    const prevTokens = store.getState().tokens;
+    const funcToken = prevTokens[prevTokens.length - 1];
+
+    if (!funcToken.blankIdxs || !funcToken.funcExps) return;
+
+    for (const blankIdx of funcToken.blankIdxs) {
+        if (isBlankType(funcToken.funcExps[blankIdx]) && funcToken.funcExps[blankIdx].value === null) {
+            funcToken.funcExps[blankIdx].value = value;
+            break;
+        }
+    }
+
+    const nextTokens = [...prevTokens.slice(0, -1), { ...funcToken, id: randomUUID() }];
+    setTokens(nextTokens);
+
+    if (isFullFuncBlank(funcToken)) {
+        setCursorIdx(prevTokens.length);
+    }
+};
+
 export const insertFuncToken = (funcExps: FuncExp[], name: string, to?: number) => {
     const idx = to === undefined ? store.getState().cursor.currIdx : to;
+
+    const blankIdxs: number[] = [];
+    funcExps.forEach((exp, idx) => {
+        if (isBlankType(exp)) blankIdxs.push(idx);
+    });
     const funcToken: Token = {
         id: randomUUID(),
         idx,
         value: 'Function',
         name,
+        funcName: name,
+        blankIdxs,
         funcExps,
     };
 
     const prevTokens = store.getState().tokens;
     const nextTokens = [...prevTokens.slice(0, idx), funcToken, ...prevTokens.slice(idx)];
-    const nextCursorIdx = idx + 1;
+
+    if (blankIdxs.length === 0) {
+        const nextCursorIdx = idx + 1;
+        setCursorIdx(nextCursorIdx);
+    }
 
     setTokens(nextTokens);
-    setCursorIdx(nextCursorIdx);
 };
 
 // 현재 커서가 위치해 있는 곳의 토큰을 삭제함.

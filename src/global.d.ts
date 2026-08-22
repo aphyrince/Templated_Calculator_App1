@@ -42,6 +42,8 @@ interface Token {
     value: number | string | 'Function' | null;
     funcExps?: FuncExp[];
     name?: string;
+    funcName?: string;
+    blankIdxs?: number[];
 }
 
 interface Cursor {
